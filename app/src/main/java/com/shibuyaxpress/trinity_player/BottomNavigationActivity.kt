@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentManager
 import com.shibuyaxpress.trinity_player.Utils.PermissionUtil
 import com.shibuyaxpress.trinity_player.fragments.AlbumFragment
 import com.shibuyaxpress.trinity_player.fragments.HomeFragment
+import com.shibuyaxpress.trinity_player.fragments.MercadoPagoFragment
 import com.shibuyaxpress.trinity_player.fragments.SongsFragment
 
 class BottomNavigationActivity : AppCompatActivity() {
@@ -25,7 +26,7 @@ class BottomNavigationActivity : AppCompatActivity() {
     private var fragmentManager: FragmentManager? = null
     private var homeFragment = HomeFragment()
     private var songsFragment = SongsFragment()
-    private var albumFragment = AlbumFragment()
+    private var albumFragment = MercadoPagoFragment()
     private var activeFragment: Fragment? = homeFragment
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
