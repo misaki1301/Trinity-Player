@@ -5,13 +5,11 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.shibuyaxpress.trinity_player.Utils.PermissionUtil
 import com.shibuyaxpress.trinity_player.fragments.AlbumFragment
 import com.shibuyaxpress.trinity_player.fragments.HomeFragment
-import com.shibuyaxpress.trinity_player.fragments.MercadoPagoFragment
 import com.shibuyaxpress.trinity_player.fragments.SongsFragment
 
 class BottomNavigationActivity : AppCompatActivity() {
@@ -26,7 +24,7 @@ class BottomNavigationActivity : AppCompatActivity() {
     private var fragmentManager: FragmentManager? = null
     private var homeFragment = HomeFragment()
     private var songsFragment = SongsFragment()
-    private var albumFragment = MercadoPagoFragment()
+    private var albumFragment = AlbumFragment()
     private var activeFragment: Fragment? = homeFragment
 
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
