@@ -1,30 +1,23 @@
 package com.shibuyaxpress.trinity_player.fragments
 
 
-import android.Manifest
 import android.content.ContentResolver
 import android.content.ContentUris
-import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.shibuyaxpress.trinity_player.R
-import com.shibuyaxpress.trinity_player.Utils.PermissionUtil
 import com.shibuyaxpress.trinity_player.adapters.SongAdapter
 import com.shibuyaxpress.trinity_player.models.AuxSong
-import kotlinx.android.synthetic.main.fragment_songs.*
 
 class SongsFragment : Fragment() {
 

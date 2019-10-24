@@ -7,7 +7,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.shibuyaxpress.trinity_player.Utils.PermissionUtil
+import com.shibuyaxpress.trinity_player.utils.PermissionUtil
 import com.shibuyaxpress.trinity_player.fragments.AlbumFragment
 import com.shibuyaxpress.trinity_player.fragments.HomeFragment
 import com.shibuyaxpress.trinity_player.fragments.SongsFragment

@@ -1,4 +1,4 @@
-package com.shibuyaxpress.trinity_player.Utils
+package com.shibuyaxpress.trinity_player.utils
 
 import android.app.Activity
 import android.content.Context
