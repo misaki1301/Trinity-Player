@@ -10,14 +10,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import android.widget.Toast
-import androidx.recyclerview.widget.DefaultItemAnimator
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.adapters.SongAdapter
 import com.shibuyaxpress.trinity_player.models.AuxSong
+import kotlinx.android.synthetic.main.activity_bottom_navigation.*
 
 class SongsFragment : Fragment() {
 
@@ -84,9 +83,5 @@ class SongsFragment : Fragment() {
             Toast.LENGTH_SHORT)
             .show()
     }
-    /*
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }*/
 
 }
