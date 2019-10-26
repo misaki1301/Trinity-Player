@@ -15,18 +15,20 @@
             android:theme="@style/AppTheme"
             android:hardwareAccelerated="true"
             tools:ignore="GoogleAppIndexingWarning">
+        <service
+
+                android:name=".services.MusicService"
+                android:enabled="true"
+                android:exported="true"/>
         <activity
                 android:screenOrientation="portrait"
-                android:name=".BottomNavigationActivity"
+                android:name=".MainActivity"
                 android:label="Music Player">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity>
-        <activity android:name=".MainActivity">
-
         </activity>
     </application>
 

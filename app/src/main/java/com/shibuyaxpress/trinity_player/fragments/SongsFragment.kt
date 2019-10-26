@@ -13,22 +13,25 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.recyclerview.widget.*
+import com.shibuyaxpress.trinity_player.MainActivity
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.adapters.SongAdapter
 import com.shibuyaxpress.trinity_player.models.AuxSong
-import kotlinx.android.synthetic.main.activity_bottom_navigation.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 class SongsFragment : Fragment() {
 
     companion object{
         var permissionGranted: Boolean = false
+        var songList: ArrayList<AuxSong> = ArrayList()
+        var songRecyclerView: RecyclerView? = null
+        var songAdapter: SongAdapter? = null
+        set(value) {
+            songAdapter?.notifyDataSetChanged()
+        }
     }
-
-    private var songList: ArrayList<AuxSong> = ArrayList()
-    private val artworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-    private var songRecyclerView: RecyclerView? = null
-    private var songAdapter: SongAdapter? = null
-    private var parentView:View? = null
+    var songAdapter: SongAdapter? = null
+    var parentView:View? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,9 +41,7 @@ class SongsFragment : Fragment() {
         parentView = inflater.inflate(R.layout.fragment_songs, container, false)
         songRecyclerView = parentView!!.findViewById(R.id.recyclerViewSong)
         setUpAdapter()
-        //if (permissionGranted){
-            getSongList()
-        //}
+        MainActivity.setSongList(songList)
         return parentView
     }
 
@@ -50,38 +51,6 @@ class SongsFragment : Fragment() {
         songRecyclerView!!.itemAnimator = DefaultItemAnimator()
         songRecyclerView!!.addItemDecoration(DividerItemDecoration(songRecyclerView!!.context, DividerItemDecoration.VERTICAL))
         songRecyclerView!!.adapter = songAdapter
-    }
-
-    private fun getSongList(){
-        val contentResolver: ContentResolver = activity!!.contentResolver
-        val musicUri: Uri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        val musicCursor: Cursor? = contentResolver.query(musicUri, null, null, null, null)
-        if (musicCursor != null && musicCursor.moveToFirst()) {
-            //get columns of each file
-            val titleCol = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.TITLE)
-            val idCol  = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media._ID)
-            val albumIdCol = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.ALBUM_ID)
-            val artistCol = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.ARTIST)
-            val songLinkCol = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.DATA)
-            do {
-                val thisId = musicCursor.getLong(idCol)
-                val thisTitle = musicCursor.getString(titleCol)
-                val thisAlbumID = musicCursor.getLong(albumIdCol)
-                val imageAlbum = ContentUris.withAppendedId(artworkUri, thisAlbumID)
-                val thisArtist = musicCursor.getString(artistCol)
-                val thisSongLink = Uri.parse(musicCursor.getString(songLinkCol))
-                songList.add(AuxSong(thisId, thisTitle, thisArtist, imageAlbum.toString(), thisSongLink.toString()))
-            } while(musicCursor.moveToNext())
-        }
-        musicCursor?.close()
-        //Sort music alphabetically
-        songList.sortBy { it.title }
-        songAdapter!!.notifyDataSetChanged()
-        Toast.makeText(
-            activity!!,
-            songList.size.toString() + "Songs Found!!!",
-            Toast.LENGTH_SHORT)
-            .show()
     }
 
 }
