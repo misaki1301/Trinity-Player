@@ -46,9 +46,33 @@ class MusicService: Service(),
     private val ACTION_PAUSE = "ACTION_PAUSE"
     private val ACTION_SKIP_PREV = "ACTION_SKIP_PREV"
     private val ACTION_SKIP_NEXT = "ACTION_SKIP_NEXT"
+    //media sesssion artifacts
     lateinit var mediaSession : MediaSessionCompat
+    //var mediaSessionCallback = MediaSessionCallback()
     lateinit var token: MediaSessionCompat.Token
     var isPlaying = false
+
+    private var mediaSessionCallback = object : MediaSessionCompat.Callback() {
+        override fun onPlay() {
+            super.onPlay()
+            player?.pause()
+        }
+
+        override fun onPause() {
+            super.onPause()
+            player?.start()
+        }
+
+        override fun onSkipToNext() {
+            super.onSkipToNext()
+            playNext()
+        }
+
+        override fun onSkipToPrevious() {
+            super.onSkipToPrevious()
+            playPreviousSong()
+        }
+    }
 
     override fun onCreate(){
         super.onCreate()
@@ -57,6 +81,15 @@ class MusicService: Service(),
         initMusicPlayer()
         mediaSession = MediaSessionCompat(this, "token")
         token = mediaSession.sessionToken
+        mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
+        val playbackBuilder = PlaybackStateCompat.Builder()
+        playbackBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
+        playbackBuilder.setActions(PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+        playbackBuilder.setActions(PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
+        mediaSession.setPlaybackState(playbackBuilder.build())
+        mediaSession.setCallback(mediaSessionCallback)
+        mediaSession.isActive = true
+
     }
 
     fun setSongList(songList:List<AuxSong>) {
@@ -70,11 +103,11 @@ class MusicService: Service(),
         //plays song
         player?.reset()
         //get song
-        var playSong = songList[songPosition!!]
+        val playSong = songList[songPosition]
         //get id
-        var currentSong = playSong.id
+        val currentSong = playSong.id
         //set URI
-        var trackUri = ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currentSong!!)
+        val trackUri = ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currentSong!!)
         //set datasource
         try {
             player?.setDataSource(applicationContext, trackUri)
@@ -131,8 +164,14 @@ class MusicService: Service(),
     override fun onPrepared(mp: MediaPlayer?) {
         mp?.start()
         //create pendingintents
-        var pauseIntent = Intent(this, MusicService::class.java)
+        val pauseIntent = Intent(this, MusicService::class.java)
         pauseIntent.action = ACTION_PAUSE
+
+        val nextIntent = Intent(this, MusicService::class.java)
+        nextIntent.action = ACTION_SKIP_NEXT
+
+        val prevIntent = Intent(this, MusicService::class.java)
+        prevIntent.action = ACTION_SKIP_PREV
         //create notification channel
         val name = "Music Service"
         val description = "Just hear about ur music"
@@ -142,7 +181,7 @@ class MusicService: Service(),
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
         //converting image to bitmap and getting current song
-        var currentSong = songList[songPosition]
+        val currentSong = songList[songPosition]
         var bitmap: Bitmap
         try {
             bitmap =
@@ -180,6 +219,7 @@ class MusicService: Service(),
         Log.d("flags",flags.toString())
         Log.d("intent",intent.toString())
         Log.d("startID",startId.toString())
+        MediaButtonReceiver.handleIntent(mediaSession, intent)
         return super.onStartCommand(intent, flags, startId)
     }
 
@@ -194,7 +234,7 @@ class MusicService: Service(),
 
     override fun onCompletion(p0: MediaPlayer?) {
         if (p0?.currentPosition!! > 0) {
-            p0?.reset()
+            p0.reset()
             playNext()
         }
     }

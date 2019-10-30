@@ -20,6 +20,11 @@
                 android:name=".services.MusicService"
                 android:enabled="true"
                 android:exported="true"/>
+        <receiver android:name="androidx.media.session.MediaButtonReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_BUTTON"/>
+            </intent-filter>
+        </receiver>
         <activity
                 android:screenOrientation="portrait"
                 android:name=".MainActivity"
