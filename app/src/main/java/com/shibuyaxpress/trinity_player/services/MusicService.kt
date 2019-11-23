@@ -192,7 +192,7 @@ class MusicService: Service(),
         //setting notification with media player
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
         notificationBuilder
-            .setSmallIcon(R.drawable.cover_photo)
+            .setSmallIcon(R.drawable.ic_stat_asset_3)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .addAction(android.R.drawable.ic_media_previous,"Previous", MediaButtonReceiver.buildMediaButtonPendingIntent(this@MusicService, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS))
             .addAction(android.R.drawable.ic_media_pause,"Pause", MediaButtonReceiver.buildMediaButtonPendingIntent(this@MusicService, PlaybackStateCompat.ACTION_PLAY_PAUSE))
