@@ -44,7 +44,7 @@ class SongAdapter(context:Context, songList:List<AuxSong>): RecyclerView.Adapter
             .placeholder(R.drawable.placeholder_song)
             .error(R.drawable.placeholder_song).centerCrop().into(holder.imageAlbum!!)
 
-        holder.itemView.setOnClickListener {
+        holder.card!!.setOnClickListener {
             MainActivity.songPicked(position)
         }
 

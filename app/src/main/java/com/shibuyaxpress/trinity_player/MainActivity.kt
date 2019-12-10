@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
     }
 
-    var musicConnection: ServiceConnection = object : ServiceConnection {
+    private var musicConnection: ServiceConnection = object : ServiceConnection {
 
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder = service as MusicBinder
@@ -135,9 +135,11 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onDestroy() {
-        stopService(playIntent)
-        musicService = null
         super.onDestroy()
+        //stopService(playIntent)
+       // unbindService(musicConnection)
+        musicService = null
+
     }
 
     /*private fun playMusic() {

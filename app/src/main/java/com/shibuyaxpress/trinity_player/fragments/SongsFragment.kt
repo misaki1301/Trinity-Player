@@ -28,6 +28,7 @@ class SongsFragment : Fragment() {
         var songAdapter: SongAdapter? = null
         set(value) {
             songAdapter?.notifyDataSetChanged()
+            field = value
         }
     }
     var songAdapter: SongAdapter? = null

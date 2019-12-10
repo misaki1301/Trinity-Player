@@ -32,6 +32,10 @@ import com.shibuyaxpress.trinity_player.MainActivity
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.models.AuxSong
 
+private const val CHANNEL_ID = "13"
+private const val ACTION_PAUSE = "ACTION_PAUSE"
+private const val ACTION_SKIP_PREV = "ACTION_SKIP_PREV"
+private const val ACTION_SKIP_NEXT = "ACTION_SKIP_NEXT"
 
 class MusicService: Service(),
     MediaPlayer.OnPreparedListener,
@@ -42,14 +46,11 @@ class MusicService: Service(),
     private var songList: List<AuxSong> = ArrayList()
     private var songPosition: Int = 0
     private var musicBind = MusicBinder()
-    private val CHANNEL_ID = "13"
-    private val ACTION_PAUSE = "ACTION_PAUSE"
-    private val ACTION_SKIP_PREV = "ACTION_SKIP_PREV"
-    private val ACTION_SKIP_NEXT = "ACTION_SKIP_NEXT"
+
     //media sesssion artifacts
-    lateinit var mediaSession : MediaSessionCompat
+    private lateinit var mediaSession : MediaSessionCompat
     //var mediaSessionCallback = MediaSessionCallback()
-    lateinit var token: MediaSessionCompat.Token
+    private lateinit var token: MediaSessionCompat.Token
     var isPlaying = false
 
     private var mediaSessionCallback = object : MediaSessionCompat.Callback() {
@@ -107,7 +108,7 @@ class MusicService: Service(),
         //get id
         val currentSong = playSong.id
         //set URI
-        val trackUri = ContentUris.withAppendedId(android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currentSong!!)
+        val trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currentSong!!)
         //set datasource
         try {
             player?.setDataSource(applicationContext, trackUri)
@@ -243,9 +244,13 @@ class MusicService: Service(),
         return musicBind
     }
 
+    //here the service detect when its unbinded but if the user touch the notification to go to
+    //the main activity it cuts the player
+    //so we comment player.stop && player.release
+    //need to make a validation
     override fun onUnbind(intent: Intent?): Boolean {
-        player?.stop()
-        player?.release()
+        //player?.stop()
+        //player?.release()
         return false
     }
 
