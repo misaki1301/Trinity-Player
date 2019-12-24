@@ -1,11 +1,9 @@
 package com.shibuyaxpress.trinity_player.models
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.PrimaryKey
+import androidx.room.*
 
 @Entity(tableName = "songs",
+    indices = [Index(value = ["id"],unique = true)],
     foreignKeys = [
     ForeignKey(
         entity = Album::class,
@@ -29,7 +27,7 @@ import androidx.room.PrimaryKey
 )
 
 data class Song(
-    @PrimaryKey(autoGenerate = true)
+    //@PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id") var id: Int?,
     @ColumnInfo(name = "title") var title: String?,
     @ColumnInfo(name = "album_id") var albumId: String?,

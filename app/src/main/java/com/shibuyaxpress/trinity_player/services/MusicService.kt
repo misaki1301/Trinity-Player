@@ -33,9 +33,7 @@ import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.models.AuxSong
 
 private const val CHANNEL_ID = "13"
-private const val ACTION_PAUSE = "ACTION_PAUSE"
-private const val ACTION_SKIP_PREV = "ACTION_SKIP_PREV"
-private const val ACTION_SKIP_NEXT = "ACTION_SKIP_NEXT"
+private const val NOTIFY_ID = 1
 
 class MusicService: Service(),
     MediaPlayer.OnPreparedListener,
@@ -47,7 +45,7 @@ class MusicService: Service(),
     private var songPosition: Int = 0
     private var musicBind = MusicBinder()
 
-    //media sesssion artifacts
+    //media session artifacts
     private lateinit var mediaSession : MediaSessionCompat
     //var mediaSessionCallback = MediaSessionCallback()
     private lateinit var token: MediaSessionCompat.Token
@@ -56,12 +54,18 @@ class MusicService: Service(),
     private var mediaSessionCallback = object : MediaSessionCompat.Callback() {
         override fun onPlay() {
             super.onPlay()
-            player?.pause()
+            if (!isPlaying) {
+                resumeSong()
+            }
         }
 
         override fun onPause() {
             super.onPause()
-            player?.start()
+            if (isPlaying) {
+                pauseSong()
+            } else {
+                resumeSong()
+            }
         }
 
         override fun onSkipToNext() {
@@ -82,11 +86,12 @@ class MusicService: Service(),
         initMusicPlayer()
         mediaSession = MediaSessionCompat(this, "token")
         token = mediaSession.sessionToken
+        //some flags like FLAG_HANDLES_MEDIA_BUTTONS ARE SET BY DEFAULT IN 8+ Android
         mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS or MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS)
         val playbackBuilder = PlaybackStateCompat.Builder()
-        playbackBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
-        playbackBuilder.setActions(PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
-        playbackBuilder.setActions(PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS)
+        //playbackBuilder.setActions(PlaybackStateCompat.ACTION_PLAY_PAUSE)
+        //playbackBuilder.setActions(PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
+        playbackBuilder.setActions(PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS or PlaybackStateCompat.ACTION_PAUSE or PlaybackStateCompat.ACTION_PLAY or PlaybackStateCompat.ACTION_SKIP_TO_NEXT)
         mediaSession.setPlaybackState(playbackBuilder.build())
         mediaSession.setCallback(mediaSessionCallback)
         mediaSession.isActive = true
@@ -100,6 +105,17 @@ class MusicService: Service(),
         songPosition = index
     }
 
+    fun pauseSong() {
+        player?.pause()
+        isPlaying = false
+        buildNotification()
+    }
+
+    fun resumeSong() {
+        player?.start()
+        isPlaying = true
+        buildNotification()
+    }
     fun playSong() {
         //plays song
         player?.reset()
@@ -109,7 +125,7 @@ class MusicService: Service(),
         val currentSong = playSong.id
         //set URI
         val trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, currentSong!!)
-        //set datasource
+        //set data source
         try {
             player?.setDataSource(applicationContext, trackUri)
         } catch (error: Exception) {
@@ -154,26 +170,14 @@ class MusicService: Service(),
         player?.setOnErrorListener(this)
     }
 
-    private val NOTIFY_ID = 1
+
 
     private fun createContentIntent(): PendingIntent {
         val intent =  Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         return PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
     }
-
-    override fun onPrepared(mp: MediaPlayer?) {
-        mp?.start()
-        //create pendingintents
-        val pauseIntent = Intent(this, MusicService::class.java)
-        pauseIntent.action = ACTION_PAUSE
-
-        val nextIntent = Intent(this, MusicService::class.java)
-        nextIntent.action = ACTION_SKIP_NEXT
-
-        val prevIntent = Intent(this, MusicService::class.java)
-        prevIntent.action = ACTION_SKIP_PREV
-        //create notification channel
+    private fun buildNotification() {
         val name = "Music Service"
         val description = "Just hear about ur music"
         val importance = NotificationManager.IMPORTANCE_LOW
@@ -183,37 +187,61 @@ class MusicService: Service(),
         notificationManager.createNotificationChannel(channel)
         //converting image to bitmap and getting current song
         val currentSong = songList[songPosition]
-        var bitmap: Bitmap
-        try {
-            bitmap =
-                MediaStore.Images.Media.getBitmap(contentResolver, currentSong.thumbnail!!.toUri())
+        val bitmap: Bitmap
+        bitmap = try {
+            MediaStore.Images.Media.getBitmap(contentResolver, currentSong.thumbnail!!.toUri())
         } catch (error:java.lang.Exception) {
-            bitmap = BitmapFactory.decodeResource(resources, R.drawable.misaki_face)
+            BitmapFactory.decodeResource(resources, R.drawable.misaki_face)
         }
         //setting notification with media player
         val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
         notificationBuilder
             .setSmallIcon(R.drawable.ic_stat_asset_3)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-            .addAction(android.R.drawable.ic_media_previous,"Previous", MediaButtonReceiver.buildMediaButtonPendingIntent(this@MusicService, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS))
-            .addAction(android.R.drawable.ic_media_pause,"Pause", MediaButtonReceiver.buildMediaButtonPendingIntent(this@MusicService, PlaybackStateCompat.ACTION_PLAY_PAUSE))
-            .addAction(android.R.drawable.ic_media_next,"Next", MediaButtonReceiver.buildMediaButtonPendingIntent(this@MusicService, PlaybackStateCompat.ACTION_SKIP_TO_NEXT))
             .setContentIntent(createContentIntent())
-            .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
-                .setMediaSession(token)
-                .setShowActionsInCompactView(0,1,2)
-                .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(this, PlaybackStateCompat.ACTION_STOP)))
             .setContentTitle(currentSong.title)
             .setContentText(currentSong.artist)
             //.setSubText("Song Name")
             .setChannelId(CHANNEL_ID)
             .setLargeIcon(bitmap)
             .setDeleteIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(this,PlaybackStateCompat.ACTION_STOP))
-        if (isPlaying) {
-            val intent = Intent(this, MusicService::class.java)
-            ContextCompat.startForegroundService(this, intent)
-            startForeground(NOTIFY_ID, notificationBuilder.build())
+        notificationBuilder
+            .addAction(android.R.drawable.ic_media_previous,"Previous", MediaButtonReceiver.buildMediaButtonPendingIntent(this@MusicService, PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS))
+        if (!isPlaying) {
+            notificationBuilder
+                .addAction(android.R.drawable.ic_media_play, "Play", MediaButtonReceiver.buildMediaButtonPendingIntent(this@MusicService, PlaybackStateCompat.ACTION_PLAY))
+        }else {
+            notificationBuilder
+                .addAction(android.R.drawable.ic_media_pause,"Pause", MediaButtonReceiver.buildMediaButtonPendingIntent(this@MusicService, PlaybackStateCompat.ACTION_PAUSE))
         }
+        notificationBuilder
+            .addAction(android.R.drawable.ic_media_next,"Next", MediaButtonReceiver.buildMediaButtonPendingIntent(this@MusicService, PlaybackStateCompat.ACTION_SKIP_TO_NEXT))
+            .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
+                .setMediaSession(token)
+                .setShowActionsInCompactView(0,1,2)
+                .setCancelButtonIntent(MediaButtonReceiver.buildMediaButtonPendingIntent(this, PlaybackStateCompat.ACTION_STOP)))
+
+        //if (isPlaying) {
+        val intent = Intent(this, MusicService::class.java)
+        ContextCompat.startForegroundService(this, intent)
+        startForeground(NOTIFY_ID, notificationBuilder.build())
+        //}
+    }
+
+    override fun onPrepared(mp: MediaPlayer?) {
+        mp?.start()
+        //create pendingintents
+        //val pauseIntent = Intent(this, MusicService::class.java)
+        //pauseIntent.action = ACTION_PLAY_PAUSE
+
+        //val nextIntent = Intent(this, MusicService::class.java)
+        //nextIntent.action = ACTION_SKIP_NEXT
+
+        //val prevIntent = Intent(this, MusicService::class.java)
+        //prevIntent.action = ACTION_SKIP_PREV
+        //create notification channel
+        buildNotification()
+
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
