@@ -1,4 +1,4 @@
-package com.shibuyaxpress.trinity_player
+package com.shibuyaxpress.trinity_player.activities
 
 import android.Manifest
 import android.content.*
@@ -13,25 +13,17 @@ import com.shibuyaxpress.trinity_player.utils.PermissionUtil
 import com.shibuyaxpress.trinity_player.fragments.AlbumFragment
 import com.shibuyaxpress.trinity_player.fragments.HomeFragment
 import com.shibuyaxpress.trinity_player.fragments.SongsFragment
-import android.media.MediaPlayer
-import android.media.AudioManager
 import android.net.Uri
-import android.os.Handler
 import android.os.IBinder
 import android.util.Log
-import android.view.MenuItem
-import android.view.View
 import android.widget.*
+import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.models.AuxSong
 import com.shibuyaxpress.trinity_player.services.MusicService
 import com.shibuyaxpress.trinity_player.services.MusicService.MusicBinder
-import com.shibuyaxpress.trinity_player.utils.GlideApp
-import com.shibuyaxpress.trinity_player.utils.TimeUtil
-import kotlinx.android.synthetic.main.activity_main.*
-import java.lang.Exception
 
 
-class MainActivity : AppCompatActivity() {
+class MenuActivity : AppCompatActivity() {
 
     private val artworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
     private val STORAGE_PERMISSION_ID: Int = 0
@@ -115,7 +107,9 @@ class MainActivity : AppCompatActivity() {
             //get service
             musicService = binder.getService()
             //past list of song to play
-            musicService!!.setSongList(songList)
+            musicService!!.setSongList(
+                songList
+            )
             musicBound = true
         }
 

@@ -7,9 +7,8 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.shibuyaxpress.trinity_player.MainActivity
+import com.shibuyaxpress.trinity_player.activities.MenuActivity
 import com.shibuyaxpress.trinity_player.R
-import com.shibuyaxpress.trinity_player.SongAdapterListener
 import com.shibuyaxpress.trinity_player.holders.SongHolder
 import com.shibuyaxpress.trinity_player.models.AuxSong
 
@@ -45,7 +44,7 @@ class SongAdapter(context:Context, songList:List<AuxSong>): RecyclerView.Adapter
             .error(R.drawable.placeholder_song).centerCrop().into(holder.imageAlbum!!)
 
         holder.card!!.setOnClickListener {
-            MainActivity.songPicked(position)
+            MenuActivity.songPicked(position)
         }
 
     }

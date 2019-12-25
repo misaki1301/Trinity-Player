@@ -1,23 +1,16 @@
 package com.shibuyaxpress.trinity_player.fragments
 
 
-import android.content.ContentResolver
-import android.content.ContentUris
-import android.database.Cursor
-import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
-import android.widget.Toast
 import androidx.recyclerview.widget.*
-import com.shibuyaxpress.trinity_player.MainActivity
+import com.shibuyaxpress.trinity_player.activities.MenuActivity
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.adapters.SongAdapter
 import com.shibuyaxpress.trinity_player.models.AuxSong
-import kotlinx.android.synthetic.main.activity_main.*
 
 class SongsFragment : Fragment() {
 
@@ -42,7 +35,7 @@ class SongsFragment : Fragment() {
         parentView = inflater.inflate(R.layout.fragment_songs, container, false)
         songRecyclerView = parentView!!.findViewById(R.id.recyclerViewSong)
         setUpAdapter()
-        MainActivity.setSongList(songList)
+        MenuActivity.setSongList(songList)
         return parentView
     }
 

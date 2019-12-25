@@ -4,7 +4,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.BroadcastReceiver
 import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
@@ -12,8 +11,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.AudioAttributes
 import android.media.MediaPlayer
-import android.media.session.MediaSession
-import android.media.session.PlaybackState
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
@@ -23,12 +20,10 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.getSystemService
 import androidx.core.net.toUri
 import androidx.media.session.MediaButtonReceiver
-import com.shibuyaxpress.trinity_player.MainActivity
+import com.shibuyaxpress.trinity_player.activities.MenuActivity
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.models.AuxSong
 
@@ -173,7 +168,7 @@ class MusicService: Service(),
 
 
     private fun createContentIntent(): PendingIntent {
-        val intent =  Intent(this, MainActivity::class.java)
+        val intent =  Intent(this, MenuActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         return PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
     }
