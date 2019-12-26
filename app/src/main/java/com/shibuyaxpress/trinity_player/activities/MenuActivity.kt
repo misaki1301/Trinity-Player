@@ -17,16 +17,19 @@ import android.net.Uri
 import android.os.IBinder
 import android.util.Log
 import android.widget.*
+import androidx.room.Room
 import com.shibuyaxpress.trinity_player.R
+import com.shibuyaxpress.trinity_player.database.AppDatabase
 import com.shibuyaxpress.trinity_player.models.AuxSong
 import com.shibuyaxpress.trinity_player.services.MusicService
 import com.shibuyaxpress.trinity_player.services.MusicService.MusicBinder
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-
+private const val STORAGE_PERMISSION_ID: Int = 0
 class MenuActivity : AppCompatActivity() {
 
     private val artworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-    private val STORAGE_PERMISSION_ID: Int = 0
     private var fragmentManager: FragmentManager? = null
     private var homeFragment = HomeFragment()
     private var songsFragment = SongsFragment()
@@ -213,6 +216,8 @@ class MenuActivity : AppCompatActivity() {
         }
     }
 
+    val db = AppDatabase(this)
+
     private fun getSongList(){
         val contentResolver: ContentResolver = applicationContext.contentResolver
         val musicUri: Uri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
@@ -231,8 +236,14 @@ class MenuActivity : AppCompatActivity() {
                 val imageAlbum = ContentUris.withAppendedId(artworkUri, thisAlbumID)
                 val thisArtist = musicCursor.getString(artistCol)
                 val thisSongLink = Uri.parse(musicCursor.getString(songLinkCol))
+                //populate songList with music data
                 songList.add(AuxSong(thisId, thisTitle, thisArtist, imageAlbum.toString(), thisSongLink.toString()))
+
             } while(musicCursor.moveToNext())
+        }
+        //add music to db
+        GlobalScope.launch {
+            db.songDao().insertAll(songList.toList())
         }
         musicCursor?.close()
         //Sort music alphabetically

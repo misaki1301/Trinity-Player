@@ -24,4 +24,7 @@ interface SongDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(song: Song)
+
+    @Insert
+    fun insertAll(songs: List<Song>)
 }
