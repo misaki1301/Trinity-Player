@@ -12,12 +12,6 @@ import androidx.room.*
         onDelete = ForeignKey.NO_ACTION
         ),
     ForeignKey(
-        entity = Genre::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("genre_id"),
-        onDelete = ForeignKey.NO_ACTION
-        ),
-    ForeignKey(
         entity = Artist::class,
         parentColumns = arrayOf("id"),
         childColumns = arrayOf("artist_id"),
@@ -28,16 +22,15 @@ import androidx.room.*
 
 data class Song(
     //@PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "id") var id: Int?,
+    @ColumnInfo(name = "id") var id: Long?,
     @ColumnInfo(name = "title") var title: String?,
-    @ColumnInfo(name = "album_id") var albumId: String?,
-    @ColumnInfo(name = "genre_id") var genreId: String?,
-    @ColumnInfo(name = "artist_id") var artistId: String?,
+    @ColumnInfo(name = "album_id") var albumId: Long?,
+    @ColumnInfo(name = "artist_id") var artistId: Long?,
     @ColumnInfo(name = "image_cover") var imageCover: String?,
     @ColumnInfo(name = "album_year") var albumYear: String?,
     @ColumnInfo(name = "length") var length: String?,
     @ColumnInfo(name = "bitrate") var bitrate: String?,
     @ColumnInfo(name = "composer") var composer: String?,
     @ColumnInfo(name = "filePath") var filePath: String?,
-    @ColumnInfo(name = "audioPath") var audioType: String?
+    @ColumnInfo(name = "audioType") var audioType: String?
 )

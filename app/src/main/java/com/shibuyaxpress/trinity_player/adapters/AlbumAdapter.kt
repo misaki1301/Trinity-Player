@@ -36,7 +36,7 @@ class AlbumAdapter(context: Context, albumList:List<Album>) : RecyclerView.Adapt
     override fun onBindViewHolder(holder: AlbumHolder, position: Int) {
         val album = albumList?.get(position)
         holder.title!!.text = album!!.name
-        holder.artist!!.text = album.artistName
+        holder.artist!!.text = album.artist_id.toString()
         GlideApp.with(context!!).load(album.imageCover)
             .error(R.drawable.placeholder_song).centerCrop().into(holder.imageAlbum!!)
     }

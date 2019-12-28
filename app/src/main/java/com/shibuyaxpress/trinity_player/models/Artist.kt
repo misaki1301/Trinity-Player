@@ -4,6 +4,7 @@ import androidx.room.Entity
 
 @Entity(tableName = "artists")
 data class Artist (
-    var id: Int?,
-    var name: String?
+    var id: Long?,
+    var name: String?,
+    var image: String?
 )

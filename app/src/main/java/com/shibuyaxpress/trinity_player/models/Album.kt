@@ -1,12 +1,13 @@
 package com.shibuyaxpress.trinity_player.models
 
 import androidx.room.Entity
+import androidx.room.Ignore
 
 @Entity(tableName = "albums")
 data class Album(
-    var id: Int?,
+    var id: Long?,
     var name: String?,
     var imageCover: String?,
-    var artistName: String?,
-    var numberOfSong: Int?
+    var artist_id: Long?,
+    @Ignore var numberOfSong: Int?
 )

@@ -4,27 +4,24 @@ import android.Manifest
 import android.content.*
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import android.os.IBinder
+import android.provider.MediaStore
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.shibuyaxpress.trinity_player.utils.PermissionUtil
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.fragments.AlbumFragment
 import com.shibuyaxpress.trinity_player.fragments.HomeFragment
 import com.shibuyaxpress.trinity_player.fragments.SongsFragment
-import android.net.Uri
-import android.os.IBinder
-import android.util.Log
-import android.widget.*
-import androidx.room.Room
-import com.shibuyaxpress.trinity_player.R
-import com.shibuyaxpress.trinity_player.database.AppDatabase
 import com.shibuyaxpress.trinity_player.models.AuxSong
 import com.shibuyaxpress.trinity_player.services.MusicService
 import com.shibuyaxpress.trinity_player.services.MusicService.MusicBinder
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.shibuyaxpress.trinity_player.utils.PermissionUtil
 
 private const val STORAGE_PERMISSION_ID: Int = 0
 class MenuActivity : AppCompatActivity() {
@@ -59,29 +56,46 @@ class MenuActivity : AppCompatActivity() {
     }
 
 
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+    private val onNavigationItemSelectedListener = BottomNavigationView
+        .OnNavigationItemSelectedListener { item ->
         showSelectedFragment(item.itemId)
     }
 
     private fun showSelectedFragment(itemId: Int): Boolean {
         when (itemId) {
             R.id.navigation_home -> {
-                fragmentManager!!.beginTransaction().hide(activeFragment!!).show(homeFragment).commit()
+                fragmentManager!!.beginTransaction()
+                    .hide(activeFragment!!).show(homeFragment).commit()
                 activeFragment = homeFragment
                 return true
             }
             R.id.navigation_songs -> {
-                fragmentManager!!.beginTransaction().hide(activeFragment!!).show(songsFragment).commit()
+                fragmentManager!!.beginTransaction()
+                    .hide(activeFragment!!).show(songsFragment).commit()
                 activeFragment = songsFragment
                 return true
             }
             R.id.navigation_albums -> {
-                fragmentManager!!.beginTransaction().hide(activeFragment!!).show(albumFragment).commit()
+                fragmentManager!!.beginTransaction()
+                    .hide(activeFragment!!).show(albumFragment).commit()
                 activeFragment = albumFragment
                 return true
             }
         }
         return false
+    }
+    private fun prepareFragments() {
+        fragmentManager!!.beginTransaction()
+            .add(R.id.contentFrame, songsFragment, "2")
+            .hide(songsFragment)
+            .commit()
+        fragmentManager!!.beginTransaction()
+            .add(R.id.contentFrame, albumFragment, "3")
+            .hide(albumFragment)
+            .commit()
+        fragmentManager!!.beginTransaction()
+            .add(R.id.contentFrame, homeFragment, "1")
+            .commit()
     }
 
     override fun onStart() {
@@ -121,7 +135,7 @@ class MenuActivity : AppCompatActivity() {
         }
     }
 
-    private fun init(){
+    private fun init() {
         if (!checkStorePermission(STORAGE_PERMISSION_ID)) {
             showRequestPermission(STORAGE_PERMISSION_ID)
         }
@@ -189,20 +203,6 @@ class MenuActivity : AppCompatActivity() {
         PermissionUtil.requestPermissions(this, requestCode, permissions)
     }
 
-    private fun prepareFragments() {
-        fragmentManager!!.beginTransaction()
-            .add(R.id.contentFrame, songsFragment, "2")
-            .hide(songsFragment)
-            .commit()
-        fragmentManager!!.beginTransaction()
-            .add(R.id.contentFrame, albumFragment, "3")
-            .hide(albumFragment)
-            .commit()
-        fragmentManager!!.beginTransaction()
-            .add(R.id.contentFrame, homeFragment, "1")
-            .commit()
-    }
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 0) {
@@ -216,20 +216,34 @@ class MenuActivity : AppCompatActivity() {
         }
     }
 
-    val db = AppDatabase(this)
+//    val db = AppDatabase(this)
 
     private fun getSongList(){
         val contentResolver: ContentResolver = applicationContext.contentResolver
-        val musicUri: Uri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
-        val musicCursor: Cursor? = contentResolver.query(musicUri, null, null, null, null)
+        val musicUri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        val musicCursor: Cursor? = contentResolver
+            .query(musicUri, null, null, null, null)
         if (musicCursor != null && musicCursor.moveToFirst()) {
             //get columns of each file
-            val titleCol = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.TITLE)
-            val idCol  = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media._ID)
-            val albumIdCol = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.ALBUM_ID)
-            val artistCol = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.ARTIST)
-            val songLinkCol = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.DATA)
+            val titleCol = musicCursor
+                .getColumnIndex(MediaStore.Audio.Media.TITLE)
+            val idCol  = musicCursor
+                .getColumnIndex(MediaStore.Audio.Media._ID)
+            val albumIdCol = musicCursor
+                .getColumnIndex(MediaStore.Audio.Media.ALBUM_ID)
+            val artistCol = musicCursor
+                .getColumnIndex(MediaStore.Audio.Media.ARTIST)
+            val artistIDCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID)
+            val songLinkCol = musicCursor
+                .getColumnIndex(MediaStore.Audio.Media.DATA)
+            //val lengthCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
+            val composerCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER)
+            var filePathCol = musicCursor
+                .getColumnIndex(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString())
+            val audioTypeCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.CONTENT_TYPE)
+            val albumIDCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_KEY)
             do {
+                val thisAlbumKEY = musicCursor.getLong(albumIDCol)
                 val thisId = musicCursor.getLong(idCol)
                 val thisTitle = musicCursor.getString(titleCol)
                 val thisAlbumID = musicCursor.getLong(albumIdCol)
@@ -237,18 +251,21 @@ class MenuActivity : AppCompatActivity() {
                 val thisArtist = musicCursor.getString(artistCol)
                 val thisSongLink = Uri.parse(musicCursor.getString(songLinkCol))
                 //populate songList with music data
-                songList.add(AuxSong(thisId, thisTitle, thisArtist, imageAlbum.toString(), thisSongLink.toString()))
+                Log.d("MusicTarget","$thisAlbumID + $thisTitle+ $thisId")
+                songList
+                    .add(
+                        AuxSong(thisId, thisTitle, thisArtist, imageAlbum.toString(),
+                            thisSongLink.toString()))
 
             } while(musicCursor.moveToNext())
         }
         //add music to db
-        GlobalScope.launch {
+        /*GlobalScope.launch {
             db.songDao().insertAll(songList.toList())
-        }
+        }*/
         musicCursor?.close()
         //Sort music alphabetically
         songList.sortBy { it.title }
-        //SongsFragment.songAdapter!!.notifyDataSetChanged()
         Toast.makeText(
             applicationContext!!,
             songList.size.toString() + "Songs Found!!!",
