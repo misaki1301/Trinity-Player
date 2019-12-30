@@ -250,8 +250,9 @@ class MenuActivity : AppCompatActivity() {
                 val imageAlbum = ContentUris.withAppendedId(artworkUri, thisAlbumID)
                 val thisArtist = musicCursor.getString(artistCol)
                 val thisSongLink = Uri.parse(musicCursor.getString(songLinkCol))
+                val thisArtistID = musicCursor.getLong(artistIDCol)
                 //populate songList with music data
-                Log.d("MusicTarget","$thisAlbumID + $thisTitle+ $thisId")
+                Log.d("MusicTarget","AlbumID $thisAlbumID, ArtistID $thisArtistID $thisTitle titleID:$thisId")
                 songList
                     .add(
                         AuxSong(thisId, thisTitle, thisArtist, imageAlbum.toString(),

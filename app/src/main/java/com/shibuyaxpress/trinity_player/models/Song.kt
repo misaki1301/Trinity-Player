@@ -27,10 +27,11 @@ data class Song(
     @ColumnInfo(name = "album_id") var albumId: Long?,
     @ColumnInfo(name = "artist_id") var artistId: Long?,
     @ColumnInfo(name = "image_cover") var imageCover: String?,
-    @ColumnInfo(name = "album_year") var albumYear: String?,
-    @ColumnInfo(name = "length") var length: String?,
-    @ColumnInfo(name = "bitrate") var bitrate: String?,
-    @ColumnInfo(name = "composer") var composer: String?,
-    @ColumnInfo(name = "filePath") var filePath: String?,
-    @ColumnInfo(name = "audioType") var audioType: String?
+    @ColumnInfo(name = "filePath") var filePath: String?
+    /*@ColumnInfo(name = "album_year") var albumYear: String?,*/
+    /*@ColumnInfo(name = "length") var length: String?,*/
+    /*@ColumnInfo(name = "bitrate") var bitrate: String?,*/
+   /* @ColumnInfo(name = "composer") var composer: String?,
+    ,
+    @ColumnInfo(name = "audioType") var audioType: String?*/
 )
