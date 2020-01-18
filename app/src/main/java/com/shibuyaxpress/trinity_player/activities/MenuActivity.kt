@@ -240,7 +240,7 @@ class MenuActivity : AppCompatActivity() {
             val composerCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER)
             var filePathCol = musicCursor
                 .getColumnIndex(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString())
-            val audioTypeCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.CONTENT_TYPE)
+            //val audioTypeCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.CONTENT_TYPE)
             val albumIDCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_KEY)
             do {
                 val thisAlbumKEY = musicCursor.getLong(albumIDCol)
