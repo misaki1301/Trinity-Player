@@ -14,6 +14,6 @@ interface AlbumDAO {
     @Query("Select * from albums")
     fun getAllAlbums(): List<Album>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(albums: List<Album>)
 }

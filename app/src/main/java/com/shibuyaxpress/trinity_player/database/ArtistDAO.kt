@@ -12,6 +12,6 @@ interface ArtistDAO {
     @Query("Select * from artists")
     fun getArtistList():List<Artist>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAllArtists(items: List<Artist>)
 }

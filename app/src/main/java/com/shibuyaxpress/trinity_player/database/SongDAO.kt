@@ -22,9 +22,9 @@ interface SongDAO {
     @Query("select * from artists")
     fun getArtistList():List<Artist>
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(song: Song)
 
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(songs: List<Song>)
 }
