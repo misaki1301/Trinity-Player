@@ -26,6 +26,7 @@ import androidx.media.session.MediaButtonReceiver
 import com.shibuyaxpress.trinity_player.activities.MenuActivity
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.models.AuxSong
+import com.shibuyaxpress.trinity_player.models.Song
 
 private const val CHANNEL_ID = "13"
 private const val NOTIFY_ID = 1
@@ -36,7 +37,7 @@ class MusicService: Service(),
     MediaPlayer.OnCompletionListener {
 
     private var player: MediaPlayer? = null
-    private var songList: List<AuxSong> = ArrayList()
+    private var songList: List<Song> = ArrayList()
     private var songPosition: Int = 0
     private var musicBind = MusicBinder()
 
@@ -93,7 +94,7 @@ class MusicService: Service(),
 
     }
 
-    fun setSongList(songList:List<AuxSong>) {
+    fun setSongList(songList:List<Song>) {
         this.songList = songList
     }
     fun setSongPosition(index:Int) {
@@ -184,7 +185,7 @@ class MusicService: Service(),
         val currentSong = songList[songPosition]
         val bitmap: Bitmap
         bitmap = try {
-            MediaStore.Images.Media.getBitmap(contentResolver, currentSong.thumbnail!!.toUri())
+            MediaStore.Images.Media.getBitmap(contentResolver, currentSong.imageCover!!.toUri())
         } catch (error:java.lang.Exception) {
             BitmapFactory.decodeResource(resources, R.drawable.misaki_face)
         }
@@ -195,7 +196,7 @@ class MusicService: Service(),
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(createContentIntent())
             .setContentTitle(currentSong.title)
-            .setContentText(currentSong.artist)
+            .setContentText("Kitazawa Shiho")
             //.setSubText("Song Name")
             .setChannelId(CHANNEL_ID)
             .setLargeIcon(bitmap)

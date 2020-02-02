@@ -2,6 +2,7 @@ package com.shibuyaxpress.trinity_player.database
 
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.shibuyaxpress.trinity_player.models.Artist
 
@@ -11,6 +12,6 @@ interface ArtistDAO {
     @Query("Select * from artists")
     fun getArtistList():List<Artist>
 
-    @Insert
-    fun insertAllArtists(vararg item: Artist)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
+    fun insertAllArtists(items: List<Artist>)
 }

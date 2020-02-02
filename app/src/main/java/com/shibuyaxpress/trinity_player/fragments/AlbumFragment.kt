@@ -12,9 +12,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.adapters.AlbumAdapter
+import com.shibuyaxpress.trinity_player.database.AppDatabase
 import com.shibuyaxpress.trinity_player.models.Album
 import com.shibuyaxpress.trinity_player.repository.AlbumRepository
 import com.shibuyaxpress.trinity_player.utils.ItemOffsetDecoration
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class AlbumFragment : Fragment() {
 
@@ -23,6 +26,7 @@ class AlbumFragment : Fragment() {
     private var albumRecyclerView: RecyclerView? = null
     private var albumAdapter: AlbumAdapter? = null
     private var parentView: View? = null
+    private lateinit var db: AppDatabase
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +36,7 @@ class AlbumFragment : Fragment() {
         parentView = inflater.inflate(R.layout.fragment_album, container, false)
         albumRecyclerView = parentView!!.findViewById(R.id.recyclerViewAlbum)
         albumRecyclerView!!.addItemDecoration(ItemOffsetDecoration(activity!!.applicationContext,R.dimen.item_offset))
+        db = AppDatabase(activity!!.applicationContext)
         setupAdapter()
         return parentView
     }
@@ -41,6 +46,20 @@ class AlbumFragment : Fragment() {
         albumRecyclerView!!.layoutManager = GridLayoutManager(activity!!.applicationContext, 2)
         albumRecyclerView!!.itemAnimator = DefaultItemAnimator()
         albumRecyclerView!!.adapter = albumAdapter
+        getAlbumsFromDatabase()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getAlbumsFromDatabase()
+
+    }
+
+    private fun getAlbumsFromDatabase() {
+        GlobalScope.launch {
+            albumAdapter!!.setAlbumList(db.albumDao().getAllAlbums() as ArrayList<Album>)
+            albumAdapter!!.notifyDataSetChanged()
+        }
     }
 
 

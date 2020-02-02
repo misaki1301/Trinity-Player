@@ -8,10 +8,12 @@ import com.shibuyaxpress.trinity_player.models.Album
 import com.shibuyaxpress.trinity_player.models.Artist
 import com.shibuyaxpress.trinity_player.models.Song
 
-@Database(entities = [Album::class, Song::class, Artist::class], version = 1)
+@Database(entities = [Album::class, Song::class, Artist::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun songDao() : SongDAO
+    abstract fun artistDao() : ArtistDAO
+    abstract fun albumDao() : AlbumDAO
 
     companion object {
         @Volatile private var instance: AppDatabase? = null
@@ -20,7 +22,9 @@ abstract class AppDatabase : RoomDatabase() {
         operator fun invoke(context:Context) = instance ?: synchronized(LOCK) {
             instance ?: buildDatabase(context).also {instance = it}
         }
+
         private fun buildDatabase(context: Context) = Room.databaseBuilder(context,
-            AppDatabase::class.java, "trinity-player.db").build()
+            AppDatabase::class.java, "trinity-player.db")
+            .build()
     }
 }

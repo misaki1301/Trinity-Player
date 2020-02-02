@@ -21,7 +21,7 @@ import androidx.room.*
 )
 
 data class Song(
-    //@PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     @ColumnInfo(name = "id") var id: Long?,
     @ColumnInfo(name = "title") var title: String?,
     @ColumnInfo(name = "album_id") var albumId: Long?,

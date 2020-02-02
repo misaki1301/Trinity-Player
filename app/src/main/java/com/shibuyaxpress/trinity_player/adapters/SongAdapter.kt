@@ -11,11 +11,12 @@ import com.shibuyaxpress.trinity_player.activities.MenuActivity
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.holders.SongHolder
 import com.shibuyaxpress.trinity_player.models.AuxSong
+import com.shibuyaxpress.trinity_player.models.Song
 
-class SongAdapter(context:Context, songList:List<AuxSong>): RecyclerView.Adapter<SongHolder>(), Filterable {
+class SongAdapter(context:Context, songList:List<Song>): RecyclerView.Adapter<SongHolder>(), Filterable {
 
-    private var songList: List<AuxSong>? = ArrayList()
-    private var songListFiltered: List<AuxSong>? = ArrayList()
+    private var songList: List<Song>? = ArrayList()
+    private var songListFiltered: List<Song>? = ArrayList()
     private var context: Context? = null
     //private var listener: SongAdapterListener
 
@@ -38,8 +39,8 @@ class SongAdapter(context:Context, songList:List<AuxSong>): RecyclerView.Adapter
     override fun onBindViewHolder(holder: SongHolder, position: Int) {
         val song = songListFiltered?.get(position)
         holder.title!!.text = song!!.title
-        holder.artist!!.text = song.artist
-        Glide.with(context!!).load(song.thumbnail)
+        holder.artist!!.text = "Kitazawa Shiho"
+        Glide.with(context!!).load(song.imageCover)
             .placeholder(R.drawable.placeholder_song)
             .error(R.drawable.placeholder_song).centerCrop().into(holder.imageAlbum!!)
 

@@ -20,6 +20,10 @@ class AlbumAdapter(context: Context, albumList:List<Album>) : RecyclerView.Adapt
         this.albumList = albumList
     }
 
+    fun setAlbumList(list:ArrayList<Album>) {
+        this.albumList = list
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AlbumHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_album, parent, false)
         return AlbumHolder(itemView)

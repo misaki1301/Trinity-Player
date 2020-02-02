@@ -15,13 +15,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.shibuyaxpress.trinity_player.R
+import com.shibuyaxpress.trinity_player.database.AppDatabase
 import com.shibuyaxpress.trinity_player.fragments.AlbumFragment
 import com.shibuyaxpress.trinity_player.fragments.HomeFragment
 import com.shibuyaxpress.trinity_player.fragments.SongsFragment
+import com.shibuyaxpress.trinity_player.models.Album
+import com.shibuyaxpress.trinity_player.models.Artist
 import com.shibuyaxpress.trinity_player.models.AuxSong
+import com.shibuyaxpress.trinity_player.models.Song
 import com.shibuyaxpress.trinity_player.services.MusicService
 import com.shibuyaxpress.trinity_player.services.MusicService.MusicBinder
 import com.shibuyaxpress.trinity_player.utils.PermissionUtil
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 private const val STORAGE_PERMISSION_ID: Int = 0
 class MenuActivity : AppCompatActivity() {
@@ -32,15 +38,16 @@ class MenuActivity : AppCompatActivity() {
     private var songsFragment = SongsFragment()
     private var albumFragment = AlbumFragment()
     private var activeFragment: Fragment? = homeFragment
+    private lateinit var db: AppDatabase
 
     companion object {
         var musicService: MusicService? = null
         var playIntent: Intent? = null
         var musicBound: Boolean = false
-        var songList = ArrayList<AuxSong>()
+        var songList = ArrayList<Song>()
 
-        fun setSongList(list: List<AuxSong>) {
-            songList = list as ArrayList<AuxSong>
+        fun setSongList(list: List<Song>) {
+            songList = list as ArrayList<Song>
             Log.d("song list size", songList.size.toString())
         }
 
@@ -110,6 +117,7 @@ class MenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        db = AppDatabase(this)
         fragmentManager = supportFragmentManager
         prepareFragments()
         init()
@@ -147,42 +155,11 @@ class MenuActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        //stopService(playIntent)
-       // unbindService(musicConnection)
+        stopService(playIntent)
+       unbindService(musicConnection)
         musicService = null
 
     }
-
-    /*private fun playMusic() {
-        if (isPlaying) {
-            iv_play.background = resources.getDrawable(android.R.drawable.ic_media_pause)
-            isPlaying = false
-            mMediaPlayer?.start()
-            return
-        }
-        iv_play.background = resources.getDrawable(android.R.drawable.ic_media_play)
-        mMediaPlayer?.pause()
-        isPlaying = true
-    }*/
-
-    /*private fun playSong() {
-        try {
-            //Displaying Song Title
-            isPlaying = true
-            iv_play.background = resources.getDrawable(android.R.drawable.ic_media_pause)
-            mMediaLayout?.visibility = View.VISIBLE
-            mTvTitle?.text = song.title
-            GlideApp.with(applicationContext).load(song.thumbnail).placeholder(R.drawable.cover_photo).error(R.drawable.cover_photo)
-                .crossFade().centerCrop().into(iv_artwork)
-            //set progressbar value
-            songProgressBar?.progress = 0
-            songProgressBar?.max = 100
-            //updating progress bar
-            updateProgressBar()
-        } catch (error: Exception){
-            error.printStackTrace()
-        }
-    }*/
 
     private fun checkStorePermission(permission: Int): Boolean {
         return if (permission == STORAGE_PERMISSION_ID) {
@@ -216,9 +193,10 @@ class MenuActivity : AppCompatActivity() {
         }
     }
 
-//    val db = AppDatabase(this)
-
     private fun getSongList(){
+        var artistList: ArrayList<Artist> = ArrayList()
+        var albumList: ArrayList<Album> = ArrayList()
+
         val contentResolver: ContentResolver = applicationContext.contentResolver
         val musicUri: Uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
         val musicCursor: Cursor? = contentResolver
@@ -242,6 +220,8 @@ class MenuActivity : AppCompatActivity() {
                 .getColumnIndex(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString())
             //val audioTypeCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.CONTENT_TYPE)
             val albumIDCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_KEY)
+
+            val albumNameCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.ALBUM)
             do {
                 val thisAlbumKEY = musicCursor.getLong(albumIDCol)
                 val thisId = musicCursor.getLong(idCol)
@@ -251,19 +231,35 @@ class MenuActivity : AppCompatActivity() {
                 val thisArtist = musicCursor.getString(artistCol)
                 val thisSongLink = Uri.parse(musicCursor.getString(songLinkCol))
                 val thisArtistID = musicCursor.getLong(artistIDCol)
+                val thisAlbumName = musicCursor.getString(albumNameCol)
                 //populate songList with music data
-                Log.d("MusicTarget","AlbumID $thisAlbumID, ArtistID $thisArtistID $thisTitle titleID:$thisId")
-                songList
+                Log.d("MusicTarget","\n AlbumID $thisAlbumID name $thisAlbumName, \n " +
+                        "ArtistID $thisArtistID Artistname: $thisArtist " +
+                        "\n SongName: $thisTitle SongID:$thisId")
+                /*songList
                     .add(
                         AuxSong(thisId, thisTitle, thisArtist, imageAlbum.toString(),
-                            thisSongLink.toString()))
+                            thisSongLink.toString()))*/
+                songList
+                    .add(Song(thisId,thisTitle,thisAlbumID,thisArtistID,imageAlbum.toString(), thisSongLink.toString()))
+                artistList
+                    .add(Artist(thisArtistID, thisArtist, ""))
+                albumList
+                    .add(Album(thisAlbumID, thisAlbumName, imageAlbum.toString(), thisArtistID))
 
             } while(musicCursor.moveToNext())
         }
+        artistList = artistList.distinct() as ArrayList<Artist>
+        albumList = albumList.distinct() as ArrayList<Album>
         //add music to db
-        /*GlobalScope.launch {
+        //1st add artist
+        //2nd then add album attaching artist
+        //3rd link artist and album to each song
+        GlobalScope.launch {
+            db.artistDao().insertAllArtists(artistList.toList())
+            db.albumDao().insertAll(albumList)
             db.songDao().insertAll(songList.toList())
-        }*/
+        }
         musicCursor?.close()
         //Sort music alphabetically
         songList.sortBy { it.title }

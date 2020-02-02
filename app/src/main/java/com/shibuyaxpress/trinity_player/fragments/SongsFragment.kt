@@ -11,12 +11,13 @@ import com.shibuyaxpress.trinity_player.activities.MenuActivity
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.adapters.SongAdapter
 import com.shibuyaxpress.trinity_player.models.AuxSong
+import com.shibuyaxpress.trinity_player.models.Song
 
 class SongsFragment : Fragment() {
 
     companion object{
         var permissionGranted: Boolean = false
-        var songList: ArrayList<AuxSong> = ArrayList()
+        var songList: ArrayList<Song> = ArrayList()
         var songRecyclerView: RecyclerView? = null
         var songAdapter: SongAdapter? = null
         set(value) {
