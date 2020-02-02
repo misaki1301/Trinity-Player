@@ -240,12 +240,17 @@ class MenuActivity : AppCompatActivity() {
                     .add(
                         AuxSong(thisId, thisTitle, thisArtist, imageAlbum.toString(),
                             thisSongLink.toString()))*/
+                val currentArtist = Artist(thisArtistID, thisArtist,"")
+                val currentAlbum = Album(thisAlbumID, thisAlbumName, imageAlbum.toString(),
+                    thisArtistID, currentArtist)
                 songList
-                    .add(Song(thisId,thisTitle,thisAlbumID,thisArtistID,imageAlbum.toString(), thisSongLink.toString()))
+                    .add(
+                        Song(thisId, thisTitle, thisAlbumID, thisArtistID, imageAlbum.toString(),
+                            thisSongLink.toString(),currentArtist, currentAlbum))
                 artistList
-                    .add(Artist(thisArtistID, thisArtist, ""))
+                    .add(currentArtist)
                 albumList
-                    .add(Album(thisAlbumID, thisAlbumName, imageAlbum.toString(), thisArtistID))
+                    .add(currentAlbum)
 
             } while(musicCursor.moveToNext())
         }

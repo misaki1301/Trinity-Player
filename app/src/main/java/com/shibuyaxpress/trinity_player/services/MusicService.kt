@@ -196,7 +196,7 @@ class MusicService: Service(),
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setContentIntent(createContentIntent())
             .setContentTitle(currentSong.title)
-            .setContentText("Kitazawa Shiho")
+            .setContentText(currentSong.artist.name)
             //.setSubText("Song Name")
             .setChannelId(CHANNEL_ID)
             .setLargeIcon(bitmap)

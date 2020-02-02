@@ -39,7 +39,7 @@ class SongAdapter(context:Context, songList:List<Song>): RecyclerView.Adapter<So
     override fun onBindViewHolder(holder: SongHolder, position: Int) {
         val song = songListFiltered?.get(position)
         holder.title!!.text = song!!.title
-        holder.artist!!.text = "Kitazawa Shiho"
+        holder.artist!!.text = song.artist.name
         Glide.with(context!!).load(song.imageCover)
             .placeholder(R.drawable.placeholder_song)
             .error(R.drawable.placeholder_song).centerCrop().into(holder.imageAlbum!!)
