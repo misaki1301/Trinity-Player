@@ -23,9 +23,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.media.session.MediaButtonReceiver
-import com.shibuyaxpress.trinity_player.activities.MenuActivity
+import com.shibuyaxpress.trinity_player.activities.MainActivity
 import com.shibuyaxpress.trinity_player.R
-import com.shibuyaxpress.trinity_player.models.AuxSong
 import com.shibuyaxpress.trinity_player.models.Song
 
 private const val CHANNEL_ID = "13"
@@ -169,7 +168,7 @@ class MusicService: Service(),
 
 
     private fun createContentIntent(): PendingIntent {
-        val intent =  Intent(this, MenuActivity::class.java)
+        val intent =  Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         return PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT)
     }

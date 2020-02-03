@@ -3,11 +3,20 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/nav_graph"
-        app:startDestination="@id/menuActivity">
-
-    <activity
-            android:id="@+id/menuActivity"
-            android:name="com.shibuyaxpress.trinity_player.activities.MenuActivity"
-            android:label="activity_main"
-            tools:layout="@layout/activity_main" />
+        app:startDestination="@id/homeFragment">
+    <fragment
+            android:id="@+id/homeFragment"
+            android:name="com.shibuyaxpress.trinity_player.fragments.HomeFragment"
+            android:label="fragment_home"
+            tools:layout="@layout/fragment_home" />
+    <fragment
+            android:id="@+id/songFragment"
+            android:name="com.shibuyaxpress.trinity_player.fragments.SongsFragment"
+            android:label="fragment_songs"
+            tools:layout="@layout/fragment_songs" />
+    <fragment
+            android:id="@+id/albumFragment"
+            android:name="com.shibuyaxpress.trinity_player.fragments.AlbumFragment"
+            android:label="fragment_album"
+            tools:layout="@layout/fragment_album" />
 </navigation>

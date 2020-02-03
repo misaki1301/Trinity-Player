@@ -33,7 +33,7 @@
         </receiver>
         <activity
                 android:screenOrientation="portrait"
-                android:name=".activities.MenuActivity"
+                android:name=".activities.MainActivity"
                 android:label="Music Player">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

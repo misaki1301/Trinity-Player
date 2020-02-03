@@ -7,10 +7,9 @@ import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.shibuyaxpress.trinity_player.activities.MenuActivity
+import com.shibuyaxpress.trinity_player.activities.MainActivity
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.holders.SongHolder
-import com.shibuyaxpress.trinity_player.models.AuxSong
 import com.shibuyaxpress.trinity_player.models.Song
 
 class SongAdapter(context:Context, songList:List<Song>): RecyclerView.Adapter<SongHolder>(), Filterable {
@@ -25,6 +24,10 @@ class SongAdapter(context:Context, songList:List<Song>): RecyclerView.Adapter<So
         this.songList = songList
         //this.listener = listener
         this.songListFiltered = songList
+    }
+
+    fun setSongList(list:List<Song>){
+        this.songList = list
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongHolder {
@@ -45,7 +48,7 @@ class SongAdapter(context:Context, songList:List<Song>): RecyclerView.Adapter<So
             .error(R.drawable.placeholder_song).centerCrop().into(holder.imageAlbum!!)
 
         holder.card!!.setOnClickListener {
-            MenuActivity.songPicked(position)
+            MainActivity.songPicked(position)
         }
 
     }

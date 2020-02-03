@@ -13,6 +13,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
+import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.database.AppDatabase
@@ -21,7 +25,6 @@ import com.shibuyaxpress.trinity_player.fragments.HomeFragment
 import com.shibuyaxpress.trinity_player.fragments.SongsFragment
 import com.shibuyaxpress.trinity_player.models.Album
 import com.shibuyaxpress.trinity_player.models.Artist
-import com.shibuyaxpress.trinity_player.models.AuxSong
 import com.shibuyaxpress.trinity_player.models.Song
 import com.shibuyaxpress.trinity_player.services.MusicService
 import com.shibuyaxpress.trinity_player.services.MusicService.MusicBinder
@@ -30,15 +33,11 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 private const val STORAGE_PERMISSION_ID: Int = 0
-class MenuActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
 
     private val artworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-    private var fragmentManager: FragmentManager? = null
-    private var homeFragment = HomeFragment()
-    private var songsFragment = SongsFragment()
-    private var albumFragment = AlbumFragment()
-    private var activeFragment: Fragment? = homeFragment
     private lateinit var db: AppDatabase
+    private lateinit var navController: NavController
 
     companion object {
         var musicService: MusicService? = null
@@ -62,49 +61,6 @@ class MenuActivity : AppCompatActivity() {
         var TAG_FRAGMENT_THREE = "fragment_albums"
     }
 
-
-    private val onNavigationItemSelectedListener = BottomNavigationView
-        .OnNavigationItemSelectedListener { item ->
-        showSelectedFragment(item.itemId)
-    }
-
-    private fun showSelectedFragment(itemId: Int): Boolean {
-        when (itemId) {
-            R.id.navigation_home -> {
-                fragmentManager!!.beginTransaction()
-                    .hide(activeFragment!!).show(homeFragment).commit()
-                activeFragment = homeFragment
-                return true
-            }
-            R.id.navigation_songs -> {
-                fragmentManager!!.beginTransaction()
-                    .hide(activeFragment!!).show(songsFragment).commit()
-                activeFragment = songsFragment
-                return true
-            }
-            R.id.navigation_albums -> {
-                fragmentManager!!.beginTransaction()
-                    .hide(activeFragment!!).show(albumFragment).commit()
-                activeFragment = albumFragment
-                return true
-            }
-        }
-        return false
-    }
-    private fun prepareFragments() {
-        fragmentManager!!.beginTransaction()
-            .add(R.id.contentFrame, songsFragment, "2")
-            .hide(songsFragment)
-            .commit()
-        fragmentManager!!.beginTransaction()
-            .add(R.id.contentFrame, albumFragment, "3")
-            .hide(albumFragment)
-            .commit()
-        fragmentManager!!.beginTransaction()
-            .add(R.id.contentFrame, homeFragment, "1")
-            .commit()
-    }
-
     override fun onStart() {
         super.onStart()
         if (playIntent == null) {
@@ -114,15 +70,26 @@ class MenuActivity : AppCompatActivity() {
         }
     }
 
+    //Setting Up the back button
+    override fun onSupportNavigateUp(): Boolean {
+        return NavigationUI.navigateUp(navController, null)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         db = AppDatabase(this)
-        fragmentManager = supportFragmentManager
-        prepareFragments()
+
+        val bottomNav: BottomNavigationView = findViewById(R.id.nav_view)
+
+        navController = Navigation.findNavController(this, R.id.contentFrame)
+        //setting the navigation controller to bottom nav
+        bottomNav.setupWithNavController(navController)
+        //setting up action bar
+        //NavigationUI.setupActionBarWithNavController(this, navController)
+
         init()
-        val navView: BottomNavigationView = findViewById(R.id.nav_view)
-        navView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
     }
 
     private var musicConnection: ServiceConnection = object : ServiceConnection {

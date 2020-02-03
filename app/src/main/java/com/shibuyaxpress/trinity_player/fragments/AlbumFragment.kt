@@ -51,7 +51,7 @@ class AlbumFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        getAlbumsFromDatabase()
+        //getAlbumsFromDatabase()
 
     }
 
