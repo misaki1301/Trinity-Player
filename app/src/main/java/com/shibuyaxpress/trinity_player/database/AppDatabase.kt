@@ -8,7 +8,7 @@ import com.shibuyaxpress.trinity_player.models.Album
 import com.shibuyaxpress.trinity_player.models.Artist
 import com.shibuyaxpress.trinity_player.models.Song
 
-@Database(entities = [Album::class, Song::class, Artist::class], version = 2)
+@Database(entities = [Album::class, Song::class, Artist::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun songDao() : SongDAO
