@@ -12,6 +12,7 @@ import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.adapters.SongAdapter
 import com.shibuyaxpress.trinity_player.database.AppDatabase
 import com.shibuyaxpress.trinity_player.models.Song
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -54,7 +55,7 @@ class SongsFragment : Fragment() {
     }
 
     private fun getSongsFromDatabase() {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             songAdapter!!.setSongList(db.songDao().getSongList())
             songAdapter!!.notifyDataSetChanged()
         }

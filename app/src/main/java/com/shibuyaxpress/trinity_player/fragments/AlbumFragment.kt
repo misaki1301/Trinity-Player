@@ -16,6 +16,7 @@ import com.shibuyaxpress.trinity_player.database.AppDatabase
 import com.shibuyaxpress.trinity_player.models.Album
 import com.shibuyaxpress.trinity_player.repository.AlbumRepository
 import com.shibuyaxpress.trinity_player.utils.ItemOffsetDecoration
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -56,7 +57,7 @@ class AlbumFragment : Fragment() {
     }
 
     private fun getAlbumsFromDatabase() {
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             albumAdapter!!.setAlbumList(db.albumDao().getAllAlbums() as ArrayList<Album>)
             albumAdapter!!.notifyDataSetChanged()
         }

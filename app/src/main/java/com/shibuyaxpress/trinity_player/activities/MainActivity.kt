@@ -29,6 +29,7 @@ import com.shibuyaxpress.trinity_player.models.Song
 import com.shibuyaxpress.trinity_player.services.MusicService
 import com.shibuyaxpress.trinity_player.services.MusicService.MusicBinder
 import com.shibuyaxpress.trinity_player.utils.PermissionUtil
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -221,13 +222,17 @@ class MainActivity : AppCompatActivity() {
 
             } while(musicCursor.moveToNext())
         }
-        artistList = artistList.distinct() as ArrayList<Artist>
-        albumList = albumList.distinct() as ArrayList<Album>
+        if (artistList.isNotEmpty()){
+            artistList = artistList.distinct() as ArrayList<Artist>
+        }
+        if (albumList.isNotEmpty()){
+            albumList = albumList.distinct() as ArrayList<Album>
+        }
         //add music to db
         //1st add artist
         //2nd then add album attaching artist
         //3rd link artist and album to each song
-        GlobalScope.launch {
+        GlobalScope.launch(Dispatchers.IO) {
             db.artistDao().insertAllArtists(artistList.toList())
             db.albumDao().insertAll(albumList)
             db.songDao().insertAll(songList.toList())
