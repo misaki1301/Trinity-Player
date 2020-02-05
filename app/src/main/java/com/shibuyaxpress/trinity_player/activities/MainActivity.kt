@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
 
         fun songPicked(position: Int) {
             //Log.d("???",view.tag.toString())
-            musicService?.setSongPosition(position)
+            musicService?.switchSongPosition(position)
             musicService?.playSong()
         }
 
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
             //get service
             musicService = binder.getService()
             //past list of song to play
-            musicService!!.setSongList(
+            musicService!!.switchSongList(
                 songList
             )
             musicBound = true

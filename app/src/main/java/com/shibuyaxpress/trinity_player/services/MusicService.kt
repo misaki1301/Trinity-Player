@@ -35,16 +35,18 @@ class MusicService: Service(),
     MediaPlayer.OnErrorListener,
     MediaPlayer.OnCompletionListener {
 
-    companion object{
-        private var songList: List<Song> = ArrayList()
-        private var songPosition: Int = 0
-        fun setSongList(songList:List<Song>) {
-            this.songList = songList
-        }
-        fun setSongPosition(index:Int) {
-            songPosition = index
-        }
+    var songList: List<Song> = emptyList()
+    var songPosition: Int = 0
+
+
+    fun switchSongList(list:List<Song>) {
+        songList = list
     }
+    fun switchSongPosition(index:Int) {
+        songPosition = index
+    }
+
+
 
     private var player: MediaPlayer? = null
 

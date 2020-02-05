@@ -10,8 +10,8 @@ import com.shibuyaxpress.trinity_player.models.Artist
 interface ArtistDAO {
 
     @Query("Select * from artists")
-    fun getArtistList():List<Artist>
+    suspend fun getArtistList():List<Artist>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAllArtists(items: List<Artist>)
+    suspend fun insertAllArtists(items: List<Artist>)
 }

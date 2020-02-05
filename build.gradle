@@ -4,7 +4,7 @@ buildscript {
     ext.kotlin_version = '1.3.50'
     ext {
         roomVersion = '2.2.2'
-        archLifecycleVersion = '2.1.0'
+        archLifecycleVersion = '2.2.0'
         androidxArchVersion = '2.1.0'
     }
     repositories {

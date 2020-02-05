@@ -11,21 +11,21 @@ import com.shibuyaxpress.trinity_player.models.Song
 @Dao
 interface SongDAO {
 
-    @Query("Select * from songs")
-    fun getSongList():List<Song>
+    @Query("Select * from songs order by title")
+    suspend fun getSongList():List<Song>
 
     @Query("select * from songs where title like '%'+:title+'%'")
-    fun getSongByTitle(title: String): List<Song>
+    suspend fun getSongByTitle(title: String): List<Song>
 
     @Query("select * from  albums")
-    fun getAlbumList():List<Album>
+    suspend fun getAlbumList():List<Album>
 
     @Query("select * from artists")
-    fun getArtistList():List<Artist>
+    suspend fun getArtistList():List<Artist>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(song: Song)
+    suspend fun insert(song: Song)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(songs: List<Song>)
+    suspend fun insertAll(songs: List<Song>)
 }

@@ -9,11 +9,11 @@ interface AlbumDAO {
 
     @Transaction
     @Query("Select * from artists")
-    fun getArtistsWithAlbum():List<ArtistHasAlbums>
+    suspend fun getArtistsWithAlbum():List<ArtistHasAlbums>
 
     @Query("Select * from albums")
-    fun getAllAlbums(): List<Album>
+    suspend fun getAllAlbums(): List<Album>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertAll(albums: List<Album>)
+    suspend fun insertAll(albums: List<Album>)
 }

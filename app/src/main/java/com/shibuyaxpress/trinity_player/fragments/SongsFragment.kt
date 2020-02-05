@@ -7,31 +7,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.*
+import com.google.android.material.snackbar.Snackbar
 import com.shibuyaxpress.trinity_player.activities.MainActivity
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.adapters.SongAdapter
 import com.shibuyaxpress.trinity_player.database.AppDatabase
 import com.shibuyaxpress.trinity_player.models.Song
 import com.shibuyaxpress.trinity_player.services.MusicService
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class SongsFragment : Fragment() {
 
     companion object{
         var permissionGranted: Boolean = false
-        /*var songList: ArrayList<Song> = ArrayList()
-        var songRecyclerView: RecyclerView? = null*/
-        /*set(value) {
-            songAdapter?.notifyDataSetChanged()
-            field = value
-        }*/
     }
     private lateinit var songRecyclerView: RecyclerView
     private lateinit var songAdapter: SongAdapter
     private var parentView:View? = null
     private lateinit var db: AppDatabase
+    private lateinit var songList: List<Song>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,9 +36,16 @@ class SongsFragment : Fragment() {
         songRecyclerView = parentView!!.findViewById(R.id.recyclerViewSong)
         db = AppDatabase(activity!!.applicationContext)
         setUpAdapter()
+        GlobalScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO) {
+                getSongsFromDB()
+            }
+            updateUI()
+        }
         return parentView
     }
 
+    //UI JOB
     private fun setUpAdapter(){
         songAdapter = SongAdapter(activity!!.applicationContext)
         songRecyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
@@ -52,16 +53,15 @@ class SongsFragment : Fragment() {
         songRecyclerView.addItemDecoration(DividerItemDecoration(songRecyclerView.context,
             DividerItemDecoration.VERTICAL))
         songRecyclerView.adapter = songAdapter
-        getSongsFromDatabase()
     }
 
-    private fun getSongsFromDatabase() {
-        var songList: List<Song>
-        GlobalScope.launch(Dispatchers.IO) {
-            songList = db.songDao().getSongList()
-            songAdapter.setSongList(songList)
-            MusicService.setSongList(songList)
-        }
+    private suspend fun getSongsFromDB() {
+        songList = db.songDao().getSongList()
+    }
+
+    private fun updateUI() {
+        songAdapter.setSongList(songList)
+        MusicService().switchSongList(songList)
         songAdapter.notifyDataSetChanged()
     }
 
