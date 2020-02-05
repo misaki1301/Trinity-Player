@@ -50,19 +50,11 @@ class AlbumFragment : Fragment() {
         getAlbumsFromDatabase()
     }
 
-    override fun onResume() {
-        super.onResume()
-        //getAlbumsFromDatabase()
-
-    }
-
     private fun getAlbumsFromDatabase() {
         GlobalScope.launch(Dispatchers.IO) {
             albumAdapter!!.setAlbumList(db.albumDao().getAllAlbums() as ArrayList<Album>)
-            albumAdapter!!.notifyDataSetChanged()
         }
+        albumAdapter!!.notifyDataSetChanged()
     }
-
-
 
 }

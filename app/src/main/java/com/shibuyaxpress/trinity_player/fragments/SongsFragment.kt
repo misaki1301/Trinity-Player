@@ -12,6 +12,7 @@ import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.adapters.SongAdapter
 import com.shibuyaxpress.trinity_player.database.AppDatabase
 import com.shibuyaxpress.trinity_player.models.Song
+import com.shibuyaxpress.trinity_player.services.MusicService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -20,15 +21,15 @@ class SongsFragment : Fragment() {
 
     companion object{
         var permissionGranted: Boolean = false
-        var songList: ArrayList<Song> = ArrayList()
-        var songRecyclerView: RecyclerView? = null
-        var songAdapter: SongAdapter? = null
-        set(value) {
+        /*var songList: ArrayList<Song> = ArrayList()
+        var songRecyclerView: RecyclerView? = null*/
+        /*set(value) {
             songAdapter?.notifyDataSetChanged()
             field = value
-        }
+        }*/
     }
-    private var songAdapter: SongAdapter? = null
+    private lateinit var songRecyclerView: RecyclerView
+    private lateinit var songAdapter: SongAdapter
     private var parentView:View? = null
     private lateinit var db: AppDatabase
 
@@ -41,24 +42,27 @@ class SongsFragment : Fragment() {
         songRecyclerView = parentView!!.findViewById(R.id.recyclerViewSong)
         db = AppDatabase(activity!!.applicationContext)
         setUpAdapter()
-        MainActivity.setSongList(songList)
         return parentView
     }
 
     private fun setUpAdapter(){
-        songAdapter = SongAdapter(activity!!.applicationContext, songList)
-        songRecyclerView!!.layoutManager = LinearLayoutManager(activity!!.applicationContext)
-        songRecyclerView!!.itemAnimator = DefaultItemAnimator()
-        songRecyclerView!!.addItemDecoration(DividerItemDecoration(songRecyclerView!!.context, DividerItemDecoration.VERTICAL))
-        songRecyclerView!!.adapter = songAdapter
+        songAdapter = SongAdapter(activity!!.applicationContext)
+        songRecyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
+        songRecyclerView.itemAnimator = DefaultItemAnimator()
+        songRecyclerView.addItemDecoration(DividerItemDecoration(songRecyclerView.context,
+            DividerItemDecoration.VERTICAL))
+        songRecyclerView.adapter = songAdapter
         getSongsFromDatabase()
     }
 
     private fun getSongsFromDatabase() {
+        var songList: List<Song>
         GlobalScope.launch(Dispatchers.IO) {
-            songAdapter!!.setSongList(db.songDao().getSongList())
-            songAdapter!!.notifyDataSetChanged()
+            songList = db.songDao().getSongList()
+            songAdapter.setSongList(songList)
+            MusicService.setSongList(songList)
         }
+        songAdapter.notifyDataSetChanged()
     }
 
 }

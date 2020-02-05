@@ -10,6 +10,7 @@ import com.shibuyaxpress.trinity_player.models.Song
 
 @Dao
 interface SongDAO {
+
     @Query("Select * from songs")
     fun getSongList():List<Song>
 

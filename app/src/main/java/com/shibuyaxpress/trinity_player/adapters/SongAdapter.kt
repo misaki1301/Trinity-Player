@@ -12,18 +12,18 @@ import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.holders.SongHolder
 import com.shibuyaxpress.trinity_player.models.Song
 
-class SongAdapter(context:Context, songList:List<Song>): RecyclerView.Adapter<SongHolder>(), Filterable {
+class SongAdapter(context:Context): RecyclerView.Adapter<SongHolder>(), Filterable {
 
     private var songList: List<Song>? = ArrayList()
-    private var songListFiltered: List<Song>? = ArrayList()
+    //private var songListFiltered: List<Song>? = ArrayList()
     private var context: Context? = null
     //private var listener: SongAdapterListener
 
     init {
         this.context = context
-        this.songList = songList
+        //this.songList = songList
         //this.listener = listener
-        this.songListFiltered = songList
+        //this.songListFiltered = songList
     }
 
     fun setSongList(list:List<Song>){
@@ -36,11 +36,11 @@ class SongAdapter(context:Context, songList:List<Song>): RecyclerView.Adapter<So
     }
 
     override fun getItemCount(): Int {
-        return songListFiltered!!.size
+        return songList!!.size
     }
 
     override fun onBindViewHolder(holder: SongHolder, position: Int) {
-        val song = songListFiltered?.get(position)
+        val song = songList?.get(position)
         holder.title!!.text = song!!.title
         holder.artist!!.text = song.artist.name
         Glide.with(context!!).load(song.imageCover)

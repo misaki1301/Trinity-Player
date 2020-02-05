@@ -35,9 +35,19 @@ class MusicService: Service(),
     MediaPlayer.OnErrorListener,
     MediaPlayer.OnCompletionListener {
 
+    companion object{
+        private var songList: List<Song> = ArrayList()
+        private var songPosition: Int = 0
+        fun setSongList(songList:List<Song>) {
+            this.songList = songList
+        }
+        fun setSongPosition(index:Int) {
+            songPosition = index
+        }
+    }
+
     private var player: MediaPlayer? = null
-    private var songList: List<Song> = ArrayList()
-    private var songPosition: Int = 0
+
     private var musicBind = MusicBinder()
 
     //media session artifacts
@@ -93,12 +103,7 @@ class MusicService: Service(),
 
     }
 
-    fun setSongList(songList:List<Song>) {
-        this.songList = songList
-    }
-    fun setSongPosition(index:Int) {
-        songPosition = index
-    }
+
 
     fun pauseSong() {
         player?.pause()
