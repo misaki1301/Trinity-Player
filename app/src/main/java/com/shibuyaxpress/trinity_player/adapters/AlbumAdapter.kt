@@ -20,7 +20,7 @@ class AlbumAdapter(context: Context, albumList:List<Album>) : RecyclerView.Adapt
         this.albumList = albumList
     }
 
-    fun setAlbumList(list:ArrayList<Album>) {
+    fun setAlbumList(list:List<Album>) {
         this.albumList = list
     }
 

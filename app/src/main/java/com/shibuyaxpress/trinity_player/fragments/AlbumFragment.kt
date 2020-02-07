@@ -19,13 +19,13 @@ import com.shibuyaxpress.trinity_player.utils.ItemOffsetDecoration
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AlbumFragment : Fragment() {
 
-    private var albumList: ArrayList<Album> = ArrayList()
-    private val artworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
-    private var albumRecyclerView: RecyclerView? = null
-    private var albumAdapter: AlbumAdapter? = null
+    private lateinit var albumList: List<Album>
+    private lateinit var albumRecyclerView: RecyclerView
+    private lateinit var albumAdapter: AlbumAdapter
     private var parentView: View? = null
     private lateinit var db: AppDatabase
 
@@ -36,25 +36,39 @@ class AlbumFragment : Fragment() {
         // Inflate the layout for this fragment
         parentView = inflater.inflate(R.layout.fragment_album, container, false)
         albumRecyclerView = parentView!!.findViewById(R.id.recyclerViewAlbum)
-        albumRecyclerView!!.addItemDecoration(ItemOffsetDecoration(activity!!.applicationContext,R.dimen.item_offset))
+        albumRecyclerView.addItemDecoration(
+            ItemOffsetDecoration(
+                activity!!.applicationContext,
+                R.dimen.item_offset
+            )
+        )
         db = AppDatabase(activity!!.applicationContext)
         setupAdapter()
+        //here comes the db load
+        GlobalScope.launch(Dispatchers.Main) {
+            withContext(Dispatchers.IO) {
+                getAlbumsFromDatabase()
+            }
+            updateUI()
+        }
         return parentView
     }
 
+    //UI Fun
     private fun setupAdapter() {
         albumAdapter = AlbumAdapter(activity!!.applicationContext, AlbumRepository().getAlbumFromRepository())
-        albumRecyclerView!!.layoutManager = GridLayoutManager(activity!!.applicationContext, 2)
-        albumRecyclerView!!.itemAnimator = DefaultItemAnimator()
-        albumRecyclerView!!.adapter = albumAdapter
-        getAlbumsFromDatabase()
+        albumRecyclerView.layoutManager = GridLayoutManager(activity!!.applicationContext, 2)
+        albumRecyclerView.itemAnimator = DefaultItemAnimator()
+        albumRecyclerView.adapter = albumAdapter
     }
 
-    private fun getAlbumsFromDatabase() {
-        GlobalScope.launch(Dispatchers.IO) {
-            albumAdapter!!.setAlbumList(db.albumDao().getAllAlbums() as ArrayList<Album>)
-        }
-        albumAdapter!!.notifyDataSetChanged()
+    private suspend fun getAlbumsFromDatabase() {
+       albumList = db.albumDao().getAllAlbums()
+    }
+
+    private fun updateUI() {
+        albumAdapter.setAlbumList(albumList)
+        albumAdapter.notifyDataSetChanged()
     }
 
 }

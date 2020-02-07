@@ -28,4 +28,7 @@ interface SongDAO {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertAll(songs: List<Song>)
+
+    @Query("SELECT * FROM songs where album_id = :album_id")
+    suspend fun getSongsFromAlbum(album_id:Int):List<Song>
 }
