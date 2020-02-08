@@ -100,9 +100,7 @@ class MainActivity : AppCompatActivity() {
             //get service
             musicService = binder.getService()
             //past list of song to play
-            musicService!!.switchSongList(
-                songList
-            )
+            musicService!!.switchSongList(songList)
             musicBound = true
         }
 
