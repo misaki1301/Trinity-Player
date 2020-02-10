@@ -18,5 +18,14 @@
             android:id="@+id/albumFragment"
             android:name="com.shibuyaxpress.trinity_player.fragments.AlbumFragment"
             android:label="fragment_album"
-            tools:layout="@layout/fragment_album" />
+            tools:layout="@layout/fragment_album" >
+        <action
+                android:id="@+id/action_albumFragment_to_albumDetailFragment"
+                app:destination="@id/albumDetailFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/albumDetailFragment"
+            android:name="com.shibuyaxpress.trinity_player.fragments.AlbumDetailFragment"
+            android:label="fragment_album_detail"
+            tools:layout="@layout/fragment_album_detail" />
 </navigation>

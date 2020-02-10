@@ -1,4 +1,4 @@
-package com.shibuyaxpress.trinity_player
+package com.shibuyaxpress.trinity_player.fragments
 
 
 import android.os.Bundle
@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.shibuyaxpress.trinity_player.R
 
 /**
  * A simple [Fragment] subclass.

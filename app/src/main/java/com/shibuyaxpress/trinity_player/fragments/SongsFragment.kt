@@ -14,9 +14,10 @@ import com.shibuyaxpress.trinity_player.adapters.SongAdapter
 import com.shibuyaxpress.trinity_player.database.AppDatabase
 import com.shibuyaxpress.trinity_player.models.Song
 import com.shibuyaxpress.trinity_player.services.MusicService
+import com.shibuyaxpress.trinity_player.utils.OnRecyclerItemClickListener
 import kotlinx.coroutines.*
 
-class SongsFragment : Fragment() {
+class SongsFragment : Fragment(), OnRecyclerItemClickListener {
 
     companion object{
         var permissionGranted: Boolean = false
@@ -47,7 +48,7 @@ class SongsFragment : Fragment() {
 
     //UI JOB
     private fun setUpAdapter(){
-        songAdapter = SongAdapter(activity!!.applicationContext)
+        songAdapter = SongAdapter(activity!!.applicationContext,this)
         songRecyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
         songRecyclerView.itemAnimator = DefaultItemAnimator()
         songRecyclerView.addItemDecoration(DividerItemDecoration(songRecyclerView.context,
@@ -63,6 +64,10 @@ class SongsFragment : Fragment() {
         songAdapter.setSongList(songList)
         MusicService().switchSongList(songList)
         songAdapter.notifyDataSetChanged()
+    }
+
+    override fun onItemClicked(item: Any, position: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

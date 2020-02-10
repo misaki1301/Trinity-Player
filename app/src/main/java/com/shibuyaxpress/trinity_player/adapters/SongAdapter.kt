@@ -11,19 +11,16 @@ import com.shibuyaxpress.trinity_player.activities.MainActivity
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.holders.SongHolder
 import com.shibuyaxpress.trinity_player.models.Song
+import com.shibuyaxpress.trinity_player.utils.OnRecyclerItemClickListener
 
-class SongAdapter(context:Context): RecyclerView.Adapter<SongHolder>(), Filterable {
+class SongAdapter(context:Context, val itemClickListener: OnRecyclerItemClickListener): RecyclerView.Adapter<SongHolder>(), Filterable {
 
     private var songList: List<Song>? = ArrayList()
-    //private var songListFiltered: List<Song>? = ArrayList()
     private var context: Context? = null
-    //private var listener: SongAdapterListener
+
 
     init {
         this.context = context
-        //this.songList = songList
-        //this.listener = listener
-        //this.songListFiltered = songList
     }
 
     fun setSongList(list:List<Song>){
@@ -40,16 +37,12 @@ class SongAdapter(context:Context): RecyclerView.Adapter<SongHolder>(), Filterab
     }
 
     override fun onBindViewHolder(holder: SongHolder, position: Int) {
-        val song = songList?.get(position)
-        holder.title!!.text = song!!.title
-        holder.artist!!.text = song.artist.name
-        Glide.with(context!!).load(song.imageCover)
-            .placeholder(R.drawable.placeholder_song)
-            .error(R.drawable.placeholder_song).centerCrop().into(holder.imageAlbum!!)
-
+        val song = songList!![position]
         holder.card!!.setOnClickListener {
             MainActivity.songPicked(position)
         }
+
+        holder.bind(song, itemClickListener, position)
 
     }
 

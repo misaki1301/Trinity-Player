@@ -9,7 +9,11 @@
             android:id="@+id/recyclerViewAlbum"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="@dimen/item_offset"/>
+            android:padding="@dimen/item_offset"
+            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:itemCount="10"
+            tools:spanCount="2"
+            tools:listitem="@layout/item_album"/>
 
     <!--<RelativeLayout
             android:id="@+id/emptyLayout"

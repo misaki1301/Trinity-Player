@@ -200,7 +200,7 @@ class MainActivity : AppCompatActivity() {
                 val thisAlbumName = musicCursor.getString(albumNameCol)
                 //populate songList with music data
                 Log.d("MusicTarget","\n AlbumID $thisAlbumID name $thisAlbumName, \n " +
-                        "ArtistID $thisArtistID Artistname: $thisArtist " +
+                        "ArtistID $thisArtistID ArtistName: $thisArtist " +
                         "\n SongName: $thisTitle SongID:$thisId")
                 /*songList
                     .add(
