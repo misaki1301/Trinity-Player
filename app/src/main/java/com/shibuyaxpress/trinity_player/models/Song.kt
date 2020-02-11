@@ -1,7 +1,10 @@
 package com.shibuyaxpress.trinity_player.models
 
+import android.os.Parcelable
 import androidx.room.*
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(tableName = "songs",
     indices = [Index(value = ["id"],unique = true)],
     foreignKeys = [
@@ -30,10 +33,4 @@ data class Song(
     @ColumnInfo(name = "filePath") var filePath: String?,
     @Embedded(prefix = "song_artist_") var artist: Artist,
     @Embedded(prefix = "song_album_") var album: Album
-    /*@ColumnInfo(name = "album_year") var albumYear: String?,*/
-    /*@ColumnInfo(name = "length") var length: String?,*/
-    /*@ColumnInfo(name = "bitrate") var bitrate: String?,*/
-   /* @ColumnInfo(name = "composer") var composer: String?,
-    ,
-    @ColumnInfo(name = "audioType") var audioType: String?*/
-)
+):Parcelable

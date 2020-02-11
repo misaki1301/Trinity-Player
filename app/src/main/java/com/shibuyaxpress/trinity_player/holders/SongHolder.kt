@@ -29,7 +29,7 @@ class SongHolder(itemView:View): RecyclerView.ViewHolder(itemView) {
             .placeholder(R.drawable.placeholder_song)
             .error(R.drawable.placeholder_song).centerCrop().into(imageAlbum!!)
         card!!.setOnClickListener {
-            clickListener.onItemClicked(song, position)
+            clickListener.onItemClicked(song, position, itemView)
         }
     }
 }

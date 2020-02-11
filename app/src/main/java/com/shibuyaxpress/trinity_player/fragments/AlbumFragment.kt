@@ -1,12 +1,14 @@
 package com.shibuyaxpress.trinity_player.fragments
 
 
-import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,18 +18,20 @@ import com.shibuyaxpress.trinity_player.database.AppDatabase
 import com.shibuyaxpress.trinity_player.models.Album
 import com.shibuyaxpress.trinity_player.repository.AlbumRepository
 import com.shibuyaxpress.trinity_player.utils.ItemOffsetDecoration
+import com.shibuyaxpress.trinity_player.utils.OnRecyclerItemClickListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class AlbumFragment : Fragment() {
+class AlbumFragment : Fragment(), OnRecyclerItemClickListener {
 
     private lateinit var albumList: List<Album>
     private lateinit var albumRecyclerView: RecyclerView
     private lateinit var albumAdapter: AlbumAdapter
     private var parentView: View? = null
     private lateinit var db: AppDatabase
+    private lateinit var host: NavHostFragment
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,7 +60,7 @@ class AlbumFragment : Fragment() {
 
     //UI Fun
     private fun setupAdapter() {
-        albumAdapter = AlbumAdapter(activity!!.applicationContext, AlbumRepository().getAlbumFromRepository())
+        albumAdapter = AlbumAdapter(activity!!.applicationContext, AlbumRepository().getAlbumFromRepository(),this)
         albumRecyclerView.layoutManager = GridLayoutManager(activity!!.applicationContext, 2)
         albumRecyclerView.itemAnimator = DefaultItemAnimator()
         albumRecyclerView.adapter = albumAdapter
@@ -69,6 +73,14 @@ class AlbumFragment : Fragment() {
     private fun updateUI() {
         albumAdapter.setAlbumList(albumList)
         albumAdapter.notifyDataSetChanged()
+    }
+
+    override fun onItemClicked(item: Any, position: Int, view: View) {
+        val album = item as Album
+        Log.d(AlbumFragment::class.simpleName, "User selected album ${album.name}")
+        //Navigation.findNavController(view).navigate(R.id.albumDetailFragment, item)
+        val direction = AlbumFragmentDirections.actionAlbumFragmentToAlbumDetailFragment(album)
+        Navigation.findNavController(view).navigate(direction)
     }
 
 }

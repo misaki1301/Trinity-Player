@@ -38,10 +38,6 @@ class SongAdapter(context:Context, val itemClickListener: OnRecyclerItemClickLis
 
     override fun onBindViewHolder(holder: SongHolder, position: Int) {
         val song = songList!![position]
-        holder.card!!.setOnClickListener {
-            MainActivity.songPicked(position)
-        }
-
         holder.bind(song, itemClickListener, position)
 
     }

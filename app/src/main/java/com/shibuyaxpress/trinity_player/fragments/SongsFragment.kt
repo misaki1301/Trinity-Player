@@ -2,6 +2,7 @@ package com.shibuyaxpress.trinity_player.fragments
 
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -66,8 +67,11 @@ class SongsFragment : Fragment(), OnRecyclerItemClickListener {
         songAdapter.notifyDataSetChanged()
     }
 
-    override fun onItemClicked(item: Any, position: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onItemClicked(item: Any, position: Int, view: View) {
+        val song = item as Song
+        Log.d(SongsFragment::class.simpleName, "Now Playing by user: ${song.title} by " +
+                "${song.artist.name}")
+        MainActivity.songPicked(position)
     }
 
 }

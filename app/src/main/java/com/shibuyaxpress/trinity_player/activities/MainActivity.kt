@@ -52,14 +52,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         fun songPicked(position: Int) {
-            //Log.d("???",view.tag.toString())
             musicService?.switchSongPosition(position)
             musicService?.playSong()
         }
-
-        var TAG_FRAGMENT_ONE = "fragment_home"
-        var TAG_FRAGMENT_TWO = "fragment_songs"
-        var TAG_FRAGMENT_THREE = "fragment_albums"
     }
 
     override fun onStart() {

@@ -21,11 +21,17 @@
             tools:layout="@layout/fragment_album" >
         <action
                 android:id="@+id/action_albumFragment_to_albumDetailFragment"
-                app:destination="@id/albumDetailFragment" />
+                app:destination="@id/albumDetailFragment"
+                app:enterAnim="@anim/fragment_close_enter"
+                app:exitAnim="@anim/fragment_close_exit" />
     </fragment>
     <fragment
             android:id="@+id/albumDetailFragment"
             android:name="com.shibuyaxpress.trinity_player.fragments.AlbumDetailFragment"
             android:label="fragment_album_detail"
-            tools:layout="@layout/fragment_album_detail" />
+            tools:layout="@layout/fragment_album_detail" >
+        <argument
+                android:name="albumSelected"
+                app:argType="com.shibuyaxpress.trinity_player.models.Album" />
+    </fragment>
 </navigation>

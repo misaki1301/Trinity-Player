@@ -9,8 +9,9 @@ import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.holders.AlbumHolder
 import com.shibuyaxpress.trinity_player.models.Album
 import com.shibuyaxpress.trinity_player.utils.GlideApp
+import com.shibuyaxpress.trinity_player.utils.OnRecyclerItemClickListener
 
-class AlbumAdapter(context: Context, albumList:List<Album>) : RecyclerView.Adapter<AlbumHolder>() {
+class AlbumAdapter(context: Context, albumList:List<Album>, val itemClickListener: OnRecyclerItemClickListener) : RecyclerView.Adapter<AlbumHolder>() {
 
     private var albumList: List<Album>? = ArrayList()
     private var context: Context? = null
@@ -38,11 +39,8 @@ class AlbumAdapter(context: Context, albumList:List<Album>) : RecyclerView.Adapt
     }
 
     override fun onBindViewHolder(holder: AlbumHolder, position: Int) {
-        val album = albumList?.get(position)
-        holder.title!!.text = album!!.name
-        holder.artist!!.text = album.artist.name
-        GlideApp.with(context!!).load(album.imageCover)
-            .error(R.drawable.placeholder_song).centerCrop().into(holder.imageAlbum!!)
+        val album = albumList!![position]
+        holder.bind(album,itemClickListener, position)
     }
 
 }
