@@ -3,7 +3,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="88dp">
+        android:layout_height="64dp">
 
     <androidx.cardview.widget.CardView
             android:id="@+id/cardViewSong"
@@ -19,19 +19,19 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
-            <ImageView
-                    android:id="@+id/albumImageView"
+            <TextView
+                    android:id="@+id/textView"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitXY"
+                    android:fontFamily="@font/mirai_bold"
+                    android:text="1"
+                    android:textAlignment="center"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintDimensionRatio="1:1"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                     android:id="@+id/titleTextView"
@@ -44,7 +44,7 @@
                     android:textStyle="bold"
                     android:typeface="normal"
                     app:layout_constraintEnd_toStartOf="@+id/imageButton"
-                    app:layout_constraintStart_toEndOf="@+id/albumImageView"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Divine Criminal" />
 
@@ -59,7 +59,7 @@
                     android:text="TextView"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/imageButton"
-                    app:layout_constraintStart_toEndOf="@+id/albumImageView"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintTop_toBottomOf="@+id/titleTextView"
                     tools:text="Fripside" />
 
@@ -72,6 +72,13 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/titleTextView"
                     app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_begin="64dp" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

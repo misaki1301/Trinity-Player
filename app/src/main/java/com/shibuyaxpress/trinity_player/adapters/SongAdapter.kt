@@ -2,6 +2,7 @@ package com.shibuyaxpress.trinity_player.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
@@ -12,6 +13,9 @@ import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.holders.SongHolder
 import com.shibuyaxpress.trinity_player.models.Song
 import com.shibuyaxpress.trinity_player.utils.OnRecyclerItemClickListener
+
+const val TYPE_LIST_COVER = 1
+const val TYPE_LIST_NO_COVER = 0
 
 class SongAdapter(context:Context, val itemClickListener: OnRecyclerItemClickListener): RecyclerView.Adapter<SongHolder>(), Filterable {
 
@@ -27,7 +31,17 @@ class SongAdapter(context:Context, val itemClickListener: OnRecyclerItemClickLis
         this.songList = list
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : RecyclerView.ViewHolder {
+        var itemview: View? = null
+        when(viewType){
+            TYPE_LIST_COVER -> {
+                itemview = LayoutInflater.from(parent.context).inflate(R.layout.item_song, parent, false)
+            }
+
+            TYPE_LIST_NO_COVER -> {
+                itemview = LayoutInflater.from(parent.context).inflate(R.layout.item_song_on_album_detail, parent,false)
+            }
+        }
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_song, parent, false)
         return SongHolder(itemView)
     }
@@ -40,6 +54,14 @@ class SongAdapter(context:Context, val itemClickListener: OnRecyclerItemClickLis
         val song = songList!![position]
         holder.bind(song, itemClickListener, position)
 
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        if (isOnAlbumDetailed){
+            return TYPE_LIST_NO_COVER
+        } else {
+            return TYPE_LIST_COVER
+        }
     }
 
     override fun getFilter(): Filter {
