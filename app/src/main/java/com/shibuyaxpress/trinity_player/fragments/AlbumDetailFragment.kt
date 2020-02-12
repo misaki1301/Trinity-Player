@@ -38,7 +38,7 @@ class AlbumDetailFragment : Fragment(), OnRecyclerItemClickListener {
     val album by lazy {
         fromBundle(arguments!!).albumSelected
     }
-    private lateinit var parentView: View
+    private var parentView: View? = null
     private lateinit var songAdapter: SongAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var songList: List<Song>
@@ -48,16 +48,18 @@ class AlbumDetailFragment : Fragment(), OnRecyclerItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d(AlbumDetailFragment::class.java.simpleName, "the album $album")
-        db = AppDatabase(activity!!.applicationContext)
-        parentView = inflater.inflate(R.layout.fragment_album_detail, container, false)
-        GlobalScope.launch(Dispatchers.Main) {
-            setUpAdapter()
-            updateUI(album, parentView)
-            withContext(Dispatchers.IO) {
-                getRelatedSongsFromDB()
+        if (parentView == null) {
+            Log.d(AlbumDetailFragment::class.java.simpleName, "the album $album")
+            db = AppDatabase(activity!!.applicationContext)
+            parentView = inflater.inflate(R.layout.fragment_album_detail, container, false)
+            GlobalScope.launch(Dispatchers.Main) {
+                setUpAdapter()
+                updateUI(album, parentView!!)
+                withContext(Dispatchers.IO) {
+                    getRelatedSongsFromDB()
+                }
+                endTouches()
             }
-            endTouches()
         }
         // Inflate the layout for this fragment
         return parentView

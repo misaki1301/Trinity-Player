@@ -37,23 +37,25 @@ class AlbumFragment : Fragment(), OnRecyclerItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        parentView = inflater.inflate(R.layout.fragment_album, container, false)
-        albumRecyclerView = parentView!!.findViewById(R.id.recyclerViewAlbum)
-        albumRecyclerView.addItemDecoration(
-            ItemOffsetDecoration(
-                activity!!.applicationContext,
-                R.dimen.item_offset
+        if (parentView == null) {
+            // Inflate the layout for this fragment
+            parentView = inflater.inflate(R.layout.fragment_album, container, false)
+            albumRecyclerView = parentView!!.findViewById(R.id.recyclerViewAlbum)
+            albumRecyclerView.addItemDecoration(
+                ItemOffsetDecoration(
+                    activity!!.applicationContext,
+                    R.dimen.item_offset
+                )
             )
-        )
-        db = AppDatabase(activity!!.applicationContext)
-        setupAdapter()
-        //here comes the db load
-        GlobalScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO) {
-                getAlbumsFromDatabase()
+            db = AppDatabase(activity!!.applicationContext)
+            setupAdapter()
+            //here comes the db load
+            GlobalScope.launch(Dispatchers.Main) {
+                withContext(Dispatchers.IO) {
+                    getAlbumsFromDatabase()
+                }
+                updateUI()
             }
-            updateUI()
         }
         return parentView
     }
