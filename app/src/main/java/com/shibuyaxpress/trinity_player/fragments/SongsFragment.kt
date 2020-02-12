@@ -33,16 +33,18 @@ class SongsFragment : Fragment(), OnRecyclerItemClickListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        parentView = inflater.inflate(R.layout.fragment_songs, container, false)
-        songRecyclerView = parentView!!.findViewById(R.id.recyclerViewSong)
-        db = AppDatabase(activity!!.applicationContext)
-        setUpAdapter()
-        GlobalScope.launch(Dispatchers.Main) {
-            withContext(Dispatchers.IO) {
-                getSongsFromDB()
+        if (parentView == null) {
+            // Inflate the layout for this fragment
+            parentView = inflater.inflate(R.layout.fragment_songs, container, false)
+            songRecyclerView = parentView!!.findViewById(R.id.recyclerViewSong)
+            db = AppDatabase(activity!!.applicationContext)
+            setUpAdapter()
+            GlobalScope.launch(Dispatchers.Main) {
+                withContext(Dispatchers.IO) {
+                    getSongsFromDB()
+                }
+                updateUI()
             }
-            updateUI()
         }
         return parentView
     }
