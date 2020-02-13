@@ -46,9 +46,7 @@ class MusicService: Service(),
         songPosition = index
     }
 
-
-
-    private var player: MediaPlayer? = null
+    var player: MediaPlayer? = null
 
     private var musicBind = MusicBinder()
 

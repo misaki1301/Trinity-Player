@@ -50,6 +50,7 @@
                 android:id="@+id/songProgressBar"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                tools:progress="55"
                 android:theme="@style/AppTheme" />
 
         <LinearLayout
@@ -65,6 +66,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    tools:text="02:11"
                     android:gravity="start"
                     android:textColor="@android:color/white" />
 
@@ -74,6 +76,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    tools:text="03:22"
                     android:gravity="end"
                     android:textColor="@android:color/white" />
         </LinearLayout>
@@ -99,8 +102,10 @@
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/dp_5"
                     android:layout_weight="1"
-                    android:textAlignment="center"
+                    android:fontFamily="@font/mirai_medium"
+                    android:textAlignment="textStart"
                     android:textColor="@android:color/white"
+                    android:typeface="serif"
                     tools:text="Crossroad" />
 
             <LinearLayout
@@ -120,7 +125,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_margin="@dimen/dp_5" />
+                        android:layout_margin="@dimen/dp_5"
+                        android:src="@android:drawable/ic_media_play"/>
 
                 <ImageView
                         android:id="@+id/iv_next"

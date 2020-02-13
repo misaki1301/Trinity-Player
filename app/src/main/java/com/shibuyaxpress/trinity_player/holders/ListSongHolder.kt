@@ -16,15 +16,20 @@ class ListSongHolder(itemView:View): RecyclerView.ViewHolder(itemView) {
     //var imageAlbum: ImageView? = null
     var artist: TextView? = null
     var card: CardView? = null
+    var position: TextView? = null
+
     init {
         card = itemView.findViewById(R.id.cardViewSong)
         title = itemView.findViewById(R.id.titleTextView)
         //imageAlbum = itemView.findViewById(R.id.albumImageView)
         artist = itemView.findViewById(R.id.artistNameTextView)
+        position = itemView.findViewById(R.id.positionTextView)
     }
+
     fun bind(song: Song, clickListener: OnRecyclerItemClickListener, position:Int){
         title!!.text = song.title
         artist!!.text = song.artist.name
+        this.position!!.text = "${position + 1}"
         /*Glide.with(itemView).load(song.imageCover)
             .placeholder(R.drawable.placeholder_song)
             .error(R.drawable.placeholder_song).centerCrop().into(imageAlbum!!)*/

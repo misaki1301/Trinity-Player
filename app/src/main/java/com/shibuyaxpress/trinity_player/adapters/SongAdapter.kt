@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import android.widget.Filter
 import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.shibuyaxpress.trinity_player.activities.MainActivity
 import com.shibuyaxpress.trinity_player.R
+import com.shibuyaxpress.trinity_player.holders.ListSongHolder
 import com.shibuyaxpress.trinity_player.holders.SongHolder
 import com.shibuyaxpress.trinity_player.models.Song
 import com.shibuyaxpress.trinity_player.utils.OnRecyclerItemClickListener
@@ -17,11 +16,11 @@ import com.shibuyaxpress.trinity_player.utils.OnRecyclerItemClickListener
 const val TYPE_LIST_COVER = 1
 const val TYPE_LIST_NO_COVER = 0
 
-class SongAdapter(context:Context, val itemClickListener: OnRecyclerItemClickListener): RecyclerView.Adapter<SongHolder>(), Filterable {
+class SongAdapter(context:Context, val itemClickListener: OnRecyclerItemClickListener): RecyclerView.Adapter<RecyclerView.ViewHolder>(), Filterable {
 
     private var songList: List<Song>? = ArrayList()
     private var context: Context? = null
-
+    private var isOnAlbumDetailed: Boolean = false
 
     init {
         this.context = context
@@ -30,37 +29,55 @@ class SongAdapter(context:Context, val itemClickListener: OnRecyclerItemClickLis
     fun setSongList(list:List<Song>){
         this.songList = list
     }
+    fun setIsOnAlbumDetail(isOn: Boolean) {
+        this.isOnAlbumDetailed = isOn
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) : RecyclerView.ViewHolder {
-        var itemview: View? = null
-        when(viewType){
+        var view: View? = null
+        return when (viewType) {
             TYPE_LIST_COVER -> {
-                itemview = LayoutInflater.from(parent.context).inflate(R.layout.item_song, parent, false)
+                view =
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_song, parent, false)
+                return SongHolder(view)
             }
 
             TYPE_LIST_NO_COVER -> {
-                itemview = LayoutInflater.from(parent.context).inflate(R.layout.item_song_on_album_detail, parent,false)
+                view = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.item_song_on_album_detail, parent, false)
+                return ListSongHolder(view)
+            }
+            else -> {
+                view =
+                    LayoutInflater.from(parent.context).inflate(R.layout.item_song, parent, false)
+                return SongHolder(view)
             }
         }
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_song, parent, false)
-        return SongHolder(itemView)
     }
 
     override fun getItemCount(): Int {
         return songList!!.size
     }
 
-    override fun onBindViewHolder(holder: SongHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val song = songList!![position]
-        holder.bind(song, itemClickListener, position)
-
+        when(getItemViewType(position)){
+            TYPE_LIST_NO_COVER -> {
+                holder as ListSongHolder
+                holder.bind(song, itemClickListener, position)
+            }
+            TYPE_LIST_COVER -> {
+                holder as SongHolder
+                holder.bind(song, itemClickListener, position)
+            }
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
-        if (isOnAlbumDetailed){
-            return TYPE_LIST_NO_COVER
+        return if (isOnAlbumDetailed){
+            TYPE_LIST_NO_COVER
         } else {
-            return TYPE_LIST_COVER
+            TYPE_LIST_COVER
         }
     }
 

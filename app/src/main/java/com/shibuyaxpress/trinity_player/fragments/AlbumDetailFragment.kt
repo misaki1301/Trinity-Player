@@ -70,6 +70,7 @@ class AlbumDetailFragment : Fragment(), OnRecyclerItemClickListener {
 
     private fun setUpAdapter() {
         songAdapter = SongAdapter(activity!!.applicationContext, this)
+        songAdapter.setIsOnAlbumDetail(true)
         albumDetailRecycler.layoutManager = LinearLayoutManager(activity!!.applicationContext)
         albumDetailRecycler.itemAnimator = DefaultItemAnimator()
         albumDetailRecycler
@@ -95,6 +96,8 @@ class AlbumDetailFragment : Fragment(), OnRecyclerItemClickListener {
         val song = item as Song
         Log.d(AlbumDetailFragment::class.java.simpleName, "Now playing by user: $song")
         MainActivity.songPicked(position)
+        //how to call a method from main activity on fragments
+        (activity as MainActivity).setMusicComponents()
     }
 
 

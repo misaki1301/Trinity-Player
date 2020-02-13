@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
+import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -29,16 +31,21 @@ import com.shibuyaxpress.trinity_player.models.Song
 import com.shibuyaxpress.trinity_player.services.MusicService
 import com.shibuyaxpress.trinity_player.services.MusicService.MusicBinder
 import com.shibuyaxpress.trinity_player.utils.PermissionUtil
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.Exception
+import kotlin.math.ceil
 
 private const val STORAGE_PERMISSION_ID: Int = 0
+
 class MainActivity : AppCompatActivity() {
 
     private val artworkUri: Uri = Uri.parse("content://media/external/audio/albumart")
     private lateinit var db: AppDatabase
     private lateinit var navController: NavController
+    private lateinit var seekBarSong: SeekBar
 
     companion object {
         var musicService: MusicService? = null
@@ -75,17 +82,67 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         db = AppDatabase(this)
-
+        seekBarSong = findViewById(R.id.songProgressBar)
         val bottomNav: BottomNavigationView = findViewById(R.id.nav_view)
-
         navController = Navigation.findNavController(this, R.id.contentFrame)
         //setting the navigation controller to bottom nav
         bottomNav.setupWithNavController(navController)
         //setting up action bar
         //NavigationUI.setupActionBarWithNavController(this, navController)
-
         init()
+        //layout_media.visibility = View.INVISIBLE
+    }
 
+    fun setMusicComponents() {
+
+        if (musicService != null && musicService!!.isPlaying) {
+            //layout_media.visibility = View.GONE
+            songProgressBar.max = musicService!!.player!!.duration
+
+            seekBarSong.setOnSeekBarChangeListener( object : SeekBar.OnSeekBarChangeListener{
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    var x = ceil(progress/1000f)
+                    if (x < 10){
+                        songCurrentDurationLabel.text = "0:0$x"
+                    } else {
+                        songCurrentDurationLabel.text = "0:$x"
+                    }
+                    var percent : Double = (progress / seekBar!!.max).toDouble()
+
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                }
+
+            })
+        }
+
+        GlobalScope.launch(Dispatchers.Main) {
+            if (musicService != null) {
+                var currentPosition = musicService!!.player!!.currentPosition
+                var total = musicService!!.player!!.duration
+                while (musicService != null && musicService!!.player == null && musicService!!.isPlaying
+                    && currentPosition < total
+                ) {
+                    try {
+                        Thread.sleep(1000)
+                        currentPosition = musicService!!.player!!.currentPosition
+                    } catch (error: Exception) {
+
+                    }
+                    seekBarSong.progress = currentPosition
+                }
+            }
+        }
     }
 
     private var musicConnection: ServiceConnection = object : ServiceConnection {
