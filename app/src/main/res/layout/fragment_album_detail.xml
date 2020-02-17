@@ -2,7 +2,6 @@
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -32,7 +31,6 @@
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/mirai_bold"
                 android:text="TextView"
-                android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageAlbumDetail"
@@ -48,7 +46,6 @@
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/mirai_medium"
                 android:text="TextView"
-                android:textColor="#FAFAFA"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageAlbumDetail"
@@ -64,7 +61,6 @@
                 android:layout_marginEnd="16dp"
                 android:fontFamily="@font/mirai_italic"
                 android:text="TextView"
-                android:textColor="#F8F5F5"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/imageAlbumDetail"

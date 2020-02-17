@@ -133,6 +133,7 @@ class MusicService: Service(),
         }
         player?.prepareAsync()
         isPlaying = true
+        Log.d(MusicService::class.java.simpleName,"Now playing from service $playSong cursor position $songPosition")
     }
 
     fun playPreviousSong() {
@@ -179,7 +180,7 @@ class MusicService: Service(),
     }
     private fun buildNotification() {
         val name = "Music Service"
-        val description = "Just hear about ur music"
+        val description = "Just hear about your music"
         val importance = NotificationManager.IMPORTANCE_LOW
         val channel = NotificationChannel(CHANNEL_ID,name,importance)
         channel.description = description

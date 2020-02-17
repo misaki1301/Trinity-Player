@@ -6,7 +6,7 @@
         android:layout_height="64dp">
 
     <androidx.cardview.widget.CardView
-            android:id="@+id/cardViewSong"
+            android:id="@+id/cardViewSongAlbum"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clickable="true"

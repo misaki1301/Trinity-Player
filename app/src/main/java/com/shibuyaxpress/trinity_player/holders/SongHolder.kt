@@ -17,7 +17,7 @@ class SongHolder(itemView:View): RecyclerView.ViewHolder(itemView) {
     var artist: TextView? = null
     var card: CardView? = null
     init {
-        card = itemView.findViewById(R.id.cardViewSong)
+        card = itemView.findViewById(R.id.cardViewSongList)
         title = itemView.findViewById(R.id.titleTextView)
         imageAlbum = itemView.findViewById(R.id.albumImageView)
         artist = itemView.findViewById(R.id.artistNameTextView)

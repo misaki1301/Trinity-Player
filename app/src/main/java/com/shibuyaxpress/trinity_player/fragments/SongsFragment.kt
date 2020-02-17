@@ -65,7 +65,8 @@ class SongsFragment : Fragment(), OnRecyclerItemClickListener {
 
     private fun updateUI() {
         songAdapter.setSongList(songList)
-        MusicService().switchSongList(songList)
+        //MusicService().switchSongList(songList)
+        MainActivity.musicService!!.switchSongList(songList)
         songAdapter.notifyDataSetChanged()
     }
 
