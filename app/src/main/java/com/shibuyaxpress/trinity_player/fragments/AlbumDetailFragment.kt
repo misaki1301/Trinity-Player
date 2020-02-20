@@ -97,7 +97,8 @@ class AlbumDetailFragment : Fragment(), OnRecyclerItemClickListener {
         Log.d(AlbumDetailFragment::class.java.simpleName, "Now playing by user: $song")
         MainActivity.songPicked(position)
         //how to call a method from main activity on fragments
-        (activity as MainActivity).setMusicComponents()
+        //apparently this kill the music reproduction for some reason
+        //(activity as MainActivity).setMusicComponents()
     }
 
 

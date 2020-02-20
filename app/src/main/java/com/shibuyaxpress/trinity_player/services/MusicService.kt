@@ -231,15 +231,6 @@ class MusicService: Service(),
 
     override fun onPrepared(mp: MediaPlayer?) {
         mp?.start()
-        //create pendingintents
-        //val pauseIntent = Intent(this, MusicService::class.java)
-        //pauseIntent.action = ACTION_PLAY_PAUSE
-
-        //val nextIntent = Intent(this, MusicService::class.java)
-        //nextIntent.action = ACTION_SKIP_NEXT
-
-        //val prevIntent = Intent(this, MusicService::class.java)
-        //prevIntent.action = ACTION_SKIP_PREV
         //create notification channel
         buildNotification()
 

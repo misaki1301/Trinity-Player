@@ -93,7 +93,8 @@ class MainActivity : AppCompatActivity() {
         //layout_media.visibility = View.INVISIBLE
     }
 
-    fun setMusicComponents() {
+    /*Need to fix this*/
+    /*fun setMusicComponents() {
 
         if (musicService != null && musicService!!.isPlaying) {
             //layout_media.visibility = View.GONE
@@ -111,7 +112,7 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         songCurrentDurationLabel.text = "0:$x"
                     }
-                    var percent : Double = (progress / seekBar!!.max).toDouble()
+                    //var percent : Double = (progress / seekBar!!.max).toDouble()
 
                 }
 
@@ -143,7 +144,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-    }
+    }*/
 
     private var musicConnection: ServiceConnection = object : ServiceConnection {
 
