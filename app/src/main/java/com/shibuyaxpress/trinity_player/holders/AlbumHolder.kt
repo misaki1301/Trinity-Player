@@ -5,6 +5,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.models.Album
 import com.shibuyaxpress.trinity_player.utils.GlideApp
@@ -26,6 +27,7 @@ class AlbumHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         title!!.text = album.name
         artist!!.text = album.artist.name
         GlideApp.with(itemView).load(album.imageCover)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .placeholder(R.drawable.placeholder_song)
             .error(R.drawable.placeholder_song)
             .centerCrop()
