@@ -204,8 +204,10 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 0) {
             for ((index, _) in permissions.withIndex()) {
                 if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-                    getSongList()
-                    SongsFragment.permissionGranted = true
+                    //if (musicService != null && !musicService!!.isPlaying) {
+                        getSongList()
+                    //}
+                    //SongsFragment.permissionGranted = true
                     return
                 }
             }

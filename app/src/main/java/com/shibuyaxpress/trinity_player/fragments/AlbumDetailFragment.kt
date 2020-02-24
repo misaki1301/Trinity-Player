@@ -87,14 +87,14 @@ class AlbumDetailFragment : Fragment(), OnRecyclerItemClickListener {
 
     private fun endTouches() {
         songAdapter.setSongList(songList)
-        //fix this piece of crap to avoid repeat in each click event
-        MainActivity.musicService!!.switchSongList(songList)
         songAdapter.notifyDataSetChanged()
     }
 
     override fun onItemClicked(item: Any, position: Int, view: View) {
         val song = item as Song
         Log.d(AlbumDetailFragment::class.java.simpleName, "Now playing by user: $song")
+        //fix this piece of crap to avoid repeat in each click event
+        MainActivity.musicService!!.switchSongList(songList)
         MainActivity.songPicked(position)
         //how to call a method from main activity on fragments
         //apparently this kill the music reproduction for some reason
