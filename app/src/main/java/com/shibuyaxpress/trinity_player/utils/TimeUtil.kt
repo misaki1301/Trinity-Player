@@ -2,6 +2,24 @@ package com.shibuyaxpress.trinity_player.utils
 
 class TimeUtil {
 
+    companion object {
+        fun timerConverter (value: Long) : String {
+            var audioTime = ""
+            val duration = value.toInt()
+            val hours = (duration / 3600000)
+            val minutes = (duration / 60000) % 60000
+            val seconds = duration % 60000 / 1000
+
+            audioTime = if (hours > 0) {
+                String.format("%02d:%02d:%02d", hours, minutes, seconds)
+            } else {
+                String.format("%02d:%02d", minutes, seconds)
+            }
+
+            return audioTime
+        }
+    }
+
     fun millisecondsToTimer(milliseconds:Long) : String {
         var finalStringTimer = ""
         var secondsString = ""
@@ -38,4 +56,5 @@ class TimeUtil {
         return currentDuration.toInt()
 
     }
+
 }

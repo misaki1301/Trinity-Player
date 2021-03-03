@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -24,6 +25,7 @@ import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.database.AppDatabase
 import com.shibuyaxpress.trinity_player.fragments.AlbumFragment
 import com.shibuyaxpress.trinity_player.fragments.HomeFragment
+import com.shibuyaxpress.trinity_player.fragments.NowPlayingFragment
 import com.shibuyaxpress.trinity_player.fragments.SongsFragment
 import com.shibuyaxpress.trinity_player.models.Album
 import com.shibuyaxpress.trinity_player.models.Artist
@@ -82,14 +84,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         db = AppDatabase(this)
-        seekBarSong = findViewById(R.id.songProgressBar)
+        //seekBarSong = findViewById(R.id.songProgressBar)
         val bottomNav: BottomNavigationView = findViewById(R.id.nav_view)
-        navController = Navigation.findNavController(this, R.id.contentFrame)
+        val navController = supportFragmentManager.findFragmentById(R.id.contentFrame)
+        //navController = Navigation.findNavController(this, R.id.contentFrame)
         //setting the navigation controller to bottom nav
-        bottomNav.setupWithNavController(navController)
+        bottomNav.setupWithNavController(navController!!.findNavController())
         //setting up action bar
         //NavigationUI.setupActionBarWithNavController(this, navController)
         init()
+
+        //create fragment now playing
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nowPlayingContainer, NowPlayingFragment())
+            .commit()
         //layout_media.visibility = View.INVISIBLE
     }
 
@@ -204,10 +212,7 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 0) {
             for ((index, _) in permissions.withIndex()) {
                 if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
-                    //if (musicService != null && !musicService!!.isPlaying) {
                         getSongList()
-                    //}
-                    //SongsFragment.permissionGranted = true
                     return
                 }
             }
@@ -235,6 +240,7 @@ class MainActivity : AppCompatActivity() {
             val artistIDCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST_ID)
             val songLinkCol = musicCursor
                 .getColumnIndex(MediaStore.Audio.Media.DATA)
+            val durationCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
             //val lengthCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.DURATION)
             val composerCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.COMPOSER)
             var filePathCol = musicCursor
@@ -253,17 +259,18 @@ class MainActivity : AppCompatActivity() {
                 val thisSongLink = Uri.parse(musicCursor.getString(songLinkCol))
                 val thisArtistID = musicCursor.getLong(artistIDCol)
                 val thisAlbumName = musicCursor.getString(albumNameCol)
+                val thisDurationSong = musicCursor.getString(durationCol)
+
                 //populate songList with music data
                 Log.d("MusicTarget","\n AlbumID $thisAlbumID name $thisAlbumName, \n " +
                         "ArtistID $thisArtistID ArtistName: $thisArtist " +
-                        "\n SongName: $thisTitle SongID:$thisId")
-                /*songList
-                    .add(
-                        AuxSong(thisId, thisTitle, thisArtist, imageAlbum.toString(),
-                            thisSongLink.toString()))*/
+                        "\n SongName: $thisTitle SongID:$thisId" +
+                        "Duration: $thisDurationSong")
+
                 val currentArtist = Artist(thisArtistID, thisArtist,"")
                 val currentAlbum = Album(thisAlbumID, thisAlbumName, imageAlbum.toString(),
                     thisArtistID, currentArtist)
+
                 songList
                     .add(
                         Song(thisId, thisTitle, thisAlbumID, thisArtistID, imageAlbum.toString(),
@@ -276,10 +283,10 @@ class MainActivity : AppCompatActivity() {
             } while(musicCursor.moveToNext())
         }
         if (artistList.isNotEmpty()){
-            artistList = artistList.distinct() as ArrayList<Artist>
+            artistList = ArrayList(artistList.distinct())
         }
         if (albumList.isNotEmpty()){
-            albumList = albumList.distinct() as ArrayList<Album>
+            albumList = ArrayList(albumList.distinct())
         }
         //add music to db
         //1st add artist
