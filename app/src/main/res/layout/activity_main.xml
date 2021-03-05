@@ -33,15 +33,17 @@
             app:layout_constraintRight_toRightOf="parent"
             app:menu="@menu/bottom_nav_menu" />
 
-    <View
+    <androidx.constraintlayout.motion.widget.MotionLayout
             android:id="@+id/nowPlayingContainer"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:elevation="20dp"
             android:background="@android:color/white"
+            app:elevation="20dp"
+            app:layoutDescription="@xml/now_playing_scene"
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:motionDebug="SHOW_ALL"
             tools:layout_height="55dp">
 
         <ImageView
@@ -49,21 +51,17 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/tsumugi_ssr"
-                app:layout_constraintBottom_toBottomOf="@id/nowPlayingContainer"
-                app:layout_constraintStart_toStartOf="@id/nowPlayingContainer"
-                app:layout_constraintTop_toTopOf="@id/nowPlayingContainer" />
+                android:src="@drawable/tsumugi_ssr" />
 
         <TextView
                 android:id="@+id/nowPlayingTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tsumugi Shiraishi"
-                app:layout_constraintEnd_toEndOf="@id/nowPlayingContainer"
-                app:layout_constraintTop_toTopOf="@id/nowPlayingContainer"
-                app:layout_constraintBottom_toBottomOf="@id/nowPlayingContainer"/>
+                tools:layout_editor_absoluteX="178dp"
+                tools:layout_editor_absoluteY="18dp" />
 
-    </View>
+    </androidx.constraintlayout.motion.widget.MotionLayout>
 
 
 </androidx.constraintlayout.motion.widget.MotionLayout>

@@ -9,13 +9,19 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
+import android.view.View
+import android.widget.ImageView
 import android.widget.SeekBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.database.AppDatabase
@@ -38,6 +44,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var db: AppDatabase
     private lateinit var navController: NavController
     private lateinit var seekBarSong: SeekBar
+    private lateinit var imageNowPlaying: ImageView
+    private lateinit var titleTextView: TextView
 
     companion object {
         var musicService: MusicService? = null
@@ -56,12 +64,34 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun loadToComponentPlay(song: Song) {
+        Glide.with(this).load(song.imageCover).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+            .into(imageNowPlaying)
+        titleTextView.text = song.title
+    }
+
     override fun onStart() {
         super.onStart()
         if (playIntent == null) {
             playIntent = Intent(this, MusicService::class.java)
             bindService(playIntent,musicConnection, Context.BIND_AUTO_CREATE)
             startService(playIntent)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val filter = IntentFilter(MusicService.ACTION)
+        LocalBroadcastManager.getInstance(this).registerReceiver(testReceiver, filter)
+    }
+
+    private var testReceiver: BroadcastReceiver =  object : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+            if (p1 != null) {
+                if (p1.extras?.getString("status") === "PLAYING_SONG") {
+                    loadToComponentPlay(p1.getParcelableExtra("currentSong")!!)
+                }
+            }
         }
     }
 
@@ -75,6 +105,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         db = AppDatabase(this)
         //seekBarSong = findViewById(R.id.songProgressBar)
+        imageNowPlaying = findViewById(R.id.imageCoverPlaying)
+        titleTextView = findViewById(R.id.nowPlayingTitleText)
         val bottomNav: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = supportFragmentManager.findFragmentById(R.id.contentFrame)
         //navController = Navigation.findNavController(this, R.id.contentFrame)
@@ -198,7 +230,10 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == 0) {
             for ((index, _) in permissions.withIndex()) {
                 if (grantResults[index] == PackageManager.PERMISSION_GRANTED) {
+                    val dbFile = applicationContext.getDatabasePath("trinity-player.db")
+                    if (!dbFile.exists()) {
                         getSongList()
+                    }
                     return
                 }
             }

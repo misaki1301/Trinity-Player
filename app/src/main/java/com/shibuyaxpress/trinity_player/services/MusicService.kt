@@ -22,6 +22,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.media.session.MediaButtonReceiver
 import com.shibuyaxpress.trinity_player.activities.MainActivity
 import com.shibuyaxpress.trinity_player.R
@@ -29,11 +30,16 @@ import com.shibuyaxpress.trinity_player.models.Song
 
 private const val CHANNEL_ID = "13"
 private const val NOTIFY_ID = 1
+private const val ACTION = "com.shibuyaxpress.trinity_player.activities.MainActivity"
 
 class MusicService: Service(),
     MediaPlayer.OnPreparedListener,
     MediaPlayer.OnErrorListener,
     MediaPlayer.OnCompletionListener {
+
+    companion object {
+        val ACTION = "com.shibuyaxpress.trinity_player.activities.MainActivity"
+    }
 
     var songList: List<Song> = emptyList()
     var songPosition: Int = 0
@@ -111,8 +117,6 @@ class MusicService: Service(),
 
     }
 
-
-
     fun pauseSong() {
         player?.pause()
         isPlaying = false
@@ -141,6 +145,11 @@ class MusicService: Service(),
         }
         player?.prepareAsync()
         isPlaying = true
+        //create a pending intent
+        val intent = Intent(ACTION)
+        intent.putExtra("status", "PLAYING_SONG")
+        intent.putExtra("currentSong", playSong)
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         Log.d(MusicService::class.java.simpleName,"Now playing from service $playSong cursor position $songPosition")
     }
 

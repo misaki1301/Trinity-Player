@@ -75,6 +75,7 @@ class SongsFragment : Fragment(), OnRecyclerItemClickListener {
         //MusicService().switchSongList(songList)
         MainActivity.musicService!!.switchSongList(songList)
         MainActivity.songPicked(position)
+
     }
 
 }
