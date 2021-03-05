@@ -9,24 +9,16 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
-import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.shibuyaxpress.trinity_player.R
 import com.shibuyaxpress.trinity_player.database.AppDatabase
-import com.shibuyaxpress.trinity_player.fragments.AlbumFragment
-import com.shibuyaxpress.trinity_player.fragments.HomeFragment
-import com.shibuyaxpress.trinity_player.fragments.NowPlayingFragment
-import com.shibuyaxpress.trinity_player.fragments.SongsFragment
 import com.shibuyaxpress.trinity_player.models.Album
 import com.shibuyaxpress.trinity_player.models.Artist
 import com.shibuyaxpress.trinity_player.models.Song
@@ -37,8 +29,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import kotlin.math.ceil
 
 private const val STORAGE_PERMISSION_ID: Int = 0
 
@@ -94,10 +84,6 @@ class MainActivity : AppCompatActivity() {
         //NavigationUI.setupActionBarWithNavController(this, navController)
         init()
 
-        //create fragment now playing
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.nowPlayingContainer, NowPlayingFragment())
-            .commit()
         //layout_media.visibility = View.INVISIBLE
     }
 

@@ -33,16 +33,37 @@
             app:layout_constraintRight_toRightOf="parent"
             app:menu="@menu/bottom_nav_menu" />
 
-    <FrameLayout
+    <View
             android:id="@+id/nowPlayingContainer"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            tools:layout_height="55dp"
             app:elevation="20dp"
+            android:background="@android:color/white"
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            />
+            tools:layout_height="55dp">
+
+        <ImageView
+                android:id="@+id/imageCoverPlaying"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/tsumugi_ssr"
+                app:layout_constraintBottom_toBottomOf="@id/nowPlayingContainer"
+                app:layout_constraintStart_toStartOf="@id/nowPlayingContainer"
+                app:layout_constraintTop_toTopOf="@id/nowPlayingContainer" />
+
+        <TextView
+                android:id="@+id/nowPlayingTitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tsumugi Shiraishi"
+                app:layout_constraintEnd_toEndOf="@id/nowPlayingContainer"
+                app:layout_constraintTop_toTopOf="@id/nowPlayingContainer"
+                app:layout_constraintBottom_toBottomOf="@id/nowPlayingContainer"/>
+
+    </View>
 
 
 </androidx.constraintlayout.motion.widget.MotionLayout>
