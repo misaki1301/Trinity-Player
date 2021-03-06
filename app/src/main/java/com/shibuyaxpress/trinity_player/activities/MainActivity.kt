@@ -109,14 +109,11 @@ class MainActivity : AppCompatActivity() {
         titleTextView = findViewById(R.id.nowPlayingTitleText)
         val bottomNav: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = supportFragmentManager.findFragmentById(R.id.contentFrame)
-        //navController = Navigation.findNavController(this, R.id.contentFrame)
         //setting the navigation controller to bottom nav
         bottomNav.setupWithNavController(navController!!.findNavController())
         //setting up action bar
         //NavigationUI.setupActionBarWithNavController(this, navController)
         init()
-
-        //layout_media.visibility = View.INVISIBLE
     }
 
     /*Need to fix this*/
@@ -192,18 +189,13 @@ class MainActivity : AppCompatActivity() {
         if (!checkStorePermission(STORAGE_PERMISSION_ID)) {
             showRequestPermission(STORAGE_PERMISSION_ID)
         }
-        //mMediaPlayer = MediaPlayer()
-        //utils = TimeUtil()
     }
-
-
 
     override fun onDestroy() {
         super.onDestroy()
         stopService(playIntent)
        unbindService(musicConnection)
         musicService = null
-
     }
 
     private fun checkStorePermission(permission: Int): Boolean {

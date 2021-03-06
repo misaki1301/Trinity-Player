@@ -50,8 +50,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imageCoverPlaying"
                 app:layout_constraintStart_toStartOf="parent"
-                android:scaleX="2.0"
-                android:scaleY="2.0"
+                android:scaleX="1.5"
+                android:scaleY="1.5"
                 />
     </ConstraintSet>
 

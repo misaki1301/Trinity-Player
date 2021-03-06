@@ -4,7 +4,7 @@
     <Transition
             app:constraintSetStart="@id/collapsed"
             app:constraintSetEnd="@id/expanded"
-            app:duration="1000">
+            >
         <OnSwipe
                 app:dragDirection="dragUp"
                 app:touchAnchorId="@id/nowPlayingContainer"
