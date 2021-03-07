@@ -20,7 +20,10 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/nav_view" />
+            app:layout_constraintBottom_toTopOf="@+id/nav_view" >
+
+
+    </androidx.fragment.app.FragmentContainerView>
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -43,8 +46,8 @@
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:motionDebug="SHOW_ALL"
-            tools:layout_height="55dp">
+            app:motionDebug="NO_DEBUG"
+            tools:layout_height="56dp">
 
         <ImageView
                 android:id="@+id/imageCoverPlaying"
@@ -57,9 +60,57 @@
                 android:id="@+id/nowPlayingTitleText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="Tsumugi Shiraishi"
-                tools:layout_editor_absoluteX="178dp"
-                tools:layout_editor_absoluteY="18dp" />
+                android:fontFamily="@font/mirai_bold" />
+
+        <TextView
+                android:id="@+id/artistNowPlayingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:fontFamily="@font/mirai_medium"
+                android:text="Idolm@ster"
+                />
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/playIconNowPlaying"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                app:icon="@android:drawable/ic_media_play"
+                android:background="@android:color/transparent"
+                app:iconTint="@android:color/darker_gray"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+            />
+        <ProgressBar
+                android:id="@+id/nowPlayingProgress"
+                style="?android:attr/progressBarStyleHorizontal"
+                tools:progressTint="@android:color/holo_blue_light"
+                tools:progress="20"
+                android:layout_height="2dp"
+                android:layout_width="match_parent" />
+
+        <SeekBar
+                android:id="@+id/nowPlayingSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        <TextView
+                android:id="@+id/currentDurationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="0:00"/>
+        <TextView
+                android:id="@+id/totalDurationTextView"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                tools:text="2:30"
+            />
 
     </androidx.constraintlayout.motion.widget.MotionLayout>
 
