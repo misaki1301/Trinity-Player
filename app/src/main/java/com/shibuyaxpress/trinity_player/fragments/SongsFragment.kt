@@ -72,7 +72,6 @@ class SongsFragment : Fragment(), OnRecyclerItemClickListener {
         val song = item as Song
         Log.d(SongsFragment::class.simpleName, "Now Playing by user: ${song.title} by " +
                 "${song.artist.name}")
-        //MusicService().switchSongList(songList)
         MainActivity.musicService!!.switchSongList(songList)
         MainActivity.songPicked(position)
 

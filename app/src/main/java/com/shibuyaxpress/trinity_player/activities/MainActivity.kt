@@ -3,6 +3,7 @@ package com.shibuyaxpress.trinity_player.activities
 import android.Manifest
 import android.content.*
 import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -20,7 +21,9 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import androidx.palette.graphics.Palette
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.shibuyaxpress.trinity_player.R
@@ -30,11 +33,13 @@ import com.shibuyaxpress.trinity_player.models.Artist
 import com.shibuyaxpress.trinity_player.models.Song
 import com.shibuyaxpress.trinity_player.services.MusicService
 import com.shibuyaxpress.trinity_player.services.MusicService.MusicBinder
+import com.shibuyaxpress.trinity_player.utils.MusicUtils
 import com.shibuyaxpress.trinity_player.utils.PermissionUtil
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import mkaflowski.mediastylepalette.MediaNotificationProcessor
 
 private const val STORAGE_PERMISSION_ID: Int = 0
 
@@ -46,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var seekBarSong: SeekBar
     private lateinit var imageNowPlaying: ImageView
     private lateinit var titleTextView: TextView
+    private lateinit var artistTextView: TextView
 
     companion object {
         var musicService: MusicService? = null
@@ -65,9 +71,33 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun loadToComponentPlay(song: Song) {
-        Glide.with(this).load(song.imageCover).override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+        Glide.with(this).load(song.imageCover)
+            .transform(RoundedCorners(16))
+            .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
             .into(imageNowPlaying)
         titleTextView.text = song.title
+        artistTextView.text = song.artist.name
+        //getting bitmap from utils
+        val bitmap = MusicUtils.getBitmapFromCover(song, contentResolver, resources)
+        val processor = MediaNotificationProcessor(this, bitmap)
+        nowPlayingContainer.setBackgroundColor(processor.backgroundColor)
+        playIconNowPlaying.iconTint = ColorStateList.valueOf(processor.primaryTextColor)
+        titleTextView.setTextColor(processor.primaryTextColor)
+        artistTextView.setTextColor(processor.secondaryTextColor)
+        totalDurationTextView.setTextColor(processor.primaryTextColor)
+        currentDurationTextView.setTextColor(processor.primaryTextColor)
+        nowPlayingSeekBar.progressTintList = ColorStateList.valueOf(processor.primaryTextColor)
+        nowPlayingSeekBar.thumbTintList = ColorStateList.valueOf(processor.primaryTextColor)
+        nowPlayingSeekBar.progressBackgroundTintList = ColorStateList.valueOf(processor.secondaryTextColor)
+        nowPlayingProgress.progressTintList = ColorStateList.valueOf(processor.primaryTextColor)
+
+    //get palette colors from Palette API
+        //val palette = Palette.Builder(bitmap).generate()
+        //setting color to views
+        //val colorMatched = palette.mutedSwatch!!
+        //nowPlayingContainer.setBackgroundColor(colorMatched.rgb)
+        //titleTextView.setTextColor(colorMatched.titleTextColor)
+        //artistTextView.setTextColor(colorMatched.bodyTextColor)
     }
 
     override fun onStart() {
@@ -107,6 +137,7 @@ class MainActivity : AppCompatActivity() {
         //seekBarSong = findViewById(R.id.songProgressBar)
         imageNowPlaying = findViewById(R.id.imageCoverPlaying)
         titleTextView = findViewById(R.id.nowPlayingTitleText)
+        artistTextView = findViewById(R.id.artistNowPlayingTextView)
         val bottomNav: BottomNavigationView = findViewById(R.id.nav_view)
         val navController = supportFragmentManager.findFragmentById(R.id.contentFrame)
         //setting the navigation controller to bottom nav
@@ -177,6 +208,7 @@ class MainActivity : AppCompatActivity() {
             musicService = binder.getService()
             //past list of song to play
             musicService!!.switchSongList(songList)
+            musicService!!.setUIControls(nowPlayingProgress, nowPlayingSeekBar, currentDurationTextView, totalDurationTextView)
             musicBound = true
         }
 

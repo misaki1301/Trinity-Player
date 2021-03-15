@@ -12,16 +12,19 @@ import com.shibuyaxpress.trinity_player.models.Song
 interface SongDAO {
 
     @Query("Select * from songs order by title")
-    suspend fun getSongList():List<Song>
+    suspend fun getSongList(): List<Song>
 
     @Query("select * from songs where title like '%'+:title+'%'")
     suspend fun getSongByTitle(title: String): List<Song>
 
     @Query("select * from  albums")
-    suspend fun getAlbumList():List<Album>
+    suspend fun getAlbumList(): List<Album>
 
     @Query("select * from artists")
-    suspend fun getArtistList():List<Artist>
+    suspend fun getArtistList(): List<Artist>
+
+    @Query("select * from songs order by random() limit '%'+:quantity+'%'")
+    suspend fun getRandomSongs(quantity: Int): List<Song>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(song: Song)
@@ -30,5 +33,5 @@ interface SongDAO {
     suspend fun insertAll(songs: List<Song>)
 
     @Query("SELECT * FROM songs where album_id = :album_id")
-    suspend fun getSongsFromAlbum(album_id: kotlin.Long?):List<Song>
+    suspend fun getSongsFromAlbum(album_id: kotlin.Long?): List<Song>
 }

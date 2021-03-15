@@ -1,15 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".fragments.HomeFragment"
-        android:background="@android:color/darker_gray">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".fragments.HomeFragment"
+        android:background="@android:color/white">
 
+    <ImageView
+            android:id="@+id/imageHeadPhone"
+            android:layout_width="139dp"
+            android:layout_height="185dp"
+            android:translationY="-35dp"
+            android:src="@drawable/headphone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+            android:id="@+id/imageUser"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:src="@drawable/misaki_face" />
 
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Move with the music you love."
+            android:fontFamily="@font/mirai_medium"
+            android:textColor="#63676A"
+            android:textSize="21sp"
+            android:maxLines="2"
+            app:layout_constraintStart_toEndOf="@id/imageUser"
+            app:layout_constraintTop_toBottomOf="@id/imageUser"
+            app:layout_constraintEnd_toStartOf="@id/imageHeadPhone"
+        />
 
-</FrameLayout>
+    <TextView
+            android:id="@+id/recentlyTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/mirai_medium"
+            android:text="Recently played - ya vengo :v"
+            android:textSize="21sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/imageHeadPhone" />
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recentPlayListRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:layout_marginTop="16dp"
+            tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            tools:itemCount="2"
+            tools:spanCount="5"
+            tools:listitem="@layout/item_album"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/recentlyTextView"
+             />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

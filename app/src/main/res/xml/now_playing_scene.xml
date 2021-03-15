@@ -5,13 +5,59 @@
     <Transition
         app:constraintSetStart="@id/collapsed"
         app:constraintSetEnd="@id/expanded"
-            />
+            >
+        <KeyFrameSet>
+            <KeyAttribute
+                    android:alpha="1"
+                    app:framePosition="0"
+                    app:motionTarget="@id/nowPlayingTitleText"
+                />
+            <KeyAttribute
+                    android:alpha="1"
+                    app:framePosition="0"
+                    app:motionTarget="@id/artistNowPlayingTextView"
+                    />
+            <KeyAttribute
+                    android:alpha="0"
+                    app:framePosition="5"
+                    app:motionTarget="@id/nowPlayingTitleText"
+                    />
+            <KeyAttribute
+                    android:alpha="0"
+                    app:framePosition="5"
+                    app:motionTarget="@id/artistNowPlayingTextView"
+                    />
+            <KeyAttribute
+                    android:alpha="0"
+                    app:framePosition="98"
+                    app:motionTarget="@id/nowPlayingTitleText"
+                    />
+            <KeyAttribute
+                    android:alpha="0"
+                    app:framePosition="98"
+                    app:motionTarget="@id/artistNowPlayingTextView"
+                    />
+            <KeyAttribute
+                    android:alpha="1"
+                    app:framePosition="100"
+                    app:motionTarget="@id/nowPlayingTitleText"
+                    />
+            <KeyAttribute
+                    android:alpha="1"
+                    app:framePosition="100"
+                    app:motionTarget="@id/artistNowPlayingTextView"
+                    />
+        </KeyFrameSet>
+    </Transition>
 
     <ConstraintSet android:id="@id/collapsed">
         <Constraint
                 android:id="@id/imageCoverPlaying"
-                android:layout_width="55dp"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginStart="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -20,13 +66,81 @@
         <Constraint
                 android:id="@id/nowPlayingTitleText"
                 android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="0dp"
                 app:layout_constraintStart_toEndOf="@id/imageCoverPlaying"
-                android:scaleX="1.0"
-                android:scaleY="1.0"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textAlignment="viewStart"
+                app:layout_constraintEnd_toStartOf="@id/playIconNowPlaying"
+                app:layout_constraintTop_toTopOf="@id/imageCoverPlaying">
+            <CustomAttribute
+                    app:attributeName="textSize"
+                    app:customDimension="6sp"
+                    />
+        </Constraint>
+        <Constraint
+                android:id="@id/artistNowPlayingTextView"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:textAlignment="viewStart"
+                app:layout_constraintStart_toEndOf="@id/imageCoverPlaying"
+                app:layout_constraintTop_toBottomOf="@id/nowPlayingTitleText"
+                app:layout_constraintBottom_toBottomOf="@id/imageCoverPlaying"
+                app:layout_constraintEnd_toStartOf="@id/playIconNowPlaying"
+                >
+            <CustomAttribute
+                    app:attributeName="textSize"
+                    app:customDimension="4sp"
+                    />
+        </Constraint>
+        <Constraint
+                android:id="@id/playIconNowPlaying"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                >
+        </Constraint>
+        <Constraint
+                android:id="@id/nowPlayingProgress"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+        <Constraint
+                android:id="@id/nowPlayingSeekBar"
+                android:alpha="0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_goneMarginStart="32dp"
+                app:layout_goneMarginEnd="32dp"
+                app:layout_constraintTop_toBottomOf="@id/artistNowPlayingTextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+        <Constraint
+                android:id="@id/currentDurationTextView"
+                android:alpha="0"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nowPlayingSeekBar"
+                />
+        <Constraint
+                android:id="@id/totalDurationTextView"
+                android:alpha="0"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nowPlayingSeekBar"
+                />
     </ConstraintSet>
 
     <ConstraintSet android:id="@id/expanded">
@@ -44,14 +158,77 @@
                 />
         <Constraint
                 android:id="@id/nowPlayingTitleText"
-                android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/imageCoverPlaying"
                 app:layout_constraintStart_toStartOf="parent"
-                android:scaleX="1.5"
-                android:scaleY="1.5"
+                >
+            <CustomAttribute
+                    app:attributeName="textSize"
+                    app:customDimension="8sp"
+                    />
+        </Constraint>
+        <Constraint
+                android:id="@id/artistNowPlayingTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:textAlignment="center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nowPlayingTitleText"
+                android:layout_marginTop="4dp"
+                >
+            <CustomAttribute
+                    app:attributeName="textSize"
+                    app:customDimension="6sp"
+                    />
+        </Constraint>
+        <Constraint
+                android:id="@id/nowPlayingProgress"
+                android:alpha="0"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+        <Constraint
+                android:id="@id/nowPlayingSeekBar"
+                android:alpha="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="18dp"
+                app:layout_constraintTop_toBottomOf="@id/artistNowPlayingTextView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+        <Constraint
+                android:id="@id/currentDurationTextView"
+                android:alpha="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nowPlayingSeekBar"
+                />
+        <Constraint
+                android:id="@id/totalDurationTextView"
+                android:alpha="1"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nowPlayingSeekBar"
                 />
     </ConstraintSet>
 
